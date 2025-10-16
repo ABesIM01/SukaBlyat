@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System;
 using System.Windows.Forms;
 
 namespace WinFormsApp2
@@ -12,44 +10,29 @@ namespace WinFormsApp2
             InitializeComponent();
         }
 
-        // Кнопка Log In
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            if (textBoxUsername.Text == "admin" && textBoxPassword.Text == "1234")
-            {
-                MessageBox.Show("Login successful!");
-                this.Hide();
-                AdminForm adminForm = new AdminForm();
-                adminForm.ShowDialog();
-                this.Show();
-            }
-            else
-            {
-                MessageBox.Show("Invalid username or password.");
-            }
+            MessageBox.Show("Вхід виконано успішно!");
         }
 
-        // Кнопка Cancel
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        // Чекбокс Show Password
+        private void buttonRegister_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Перехід до реєстрації.");
+        }
+
         private void checkBoxShowPassword_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxPassword.PasswordChar = checkBoxShowPassword.Checked ? '\0' : '*';
+            textBoxPassword.UseSystemPasswordChar = !checkBoxShowPassword.Checked;
         }
 
-        private void labelUsername_Click(object sender, EventArgs e)
+        private void linkForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Зазвичай для Label подія Click не потрібна, можна видалити
+            MessageBox.Show("Функція відновлення паролю наразі недоступна.");
         }
-
-        private void labelUsername_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

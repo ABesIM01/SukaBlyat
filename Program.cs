@@ -1,25 +1,25 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SQLitePCL;
+using WinFormsApp2;
 
 namespace WinFormsApp2
 {
-    internal static class Program
+    static class Program
     {
-        /// <summary>
-        /// Главная точка входа для приложения.
-        /// </summary>
         [STAThread]
         static void Main()
         {
+            // Встановлюємо сучасне відображення для Windows 10/11
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            // Ініціалізація бази даних
+            Database.Init();
+
+            // Запуск форми входу
+            Application.Run(new LoginForm());
         }
-
-
     }
 }
+
