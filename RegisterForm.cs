@@ -6,7 +6,7 @@ namespace WinFormsApp2
 {
     public partial class RegisterForm : Form
     {
-        private LoginForm loginForm;
+        private readonly LoginForm loginForm;
 
         public RegisterForm(LoginForm loginForm)
         {
@@ -17,40 +17,48 @@ namespace WinFormsApp2
 
         private void buttonRegister_Click(object sender, EventArgs e)
         {
-            string username = textBoxUsername.Text.Trim();
-            string email = textBoxEmail.Text.Trim();
-            string password = textBoxPassword.Text;
-
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            try
             {
-                MessageBox.Show("Заповніть усі поля.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                string username = textBoxUsername.Text.Trim();
+                string email = textBoxEmail.Text.Trim();
+                string password = textBoxPassword.Text;
 
-            if (!IsValidEmail(email))
+                // Перевірки полів
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+                {
+                    MessageBox.Show("Заповніть усі поля.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!IsValidEmail(email))
+                {
+                    MessageBox.Show("Введено некоректний email.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (Database.UserExists(email))
+                {
+                    MessageBox.Show("Користувач з таким email вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (Database.UsernameExists(username))
+                {
+                    MessageBox.Show("Користувач з таким іменем вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Тепер не хешуємо вручну — AddUser зробить це сам
+                Database.AddUser(username, email, password);
+
+                MessageBox.Show("Реєстрація успішна!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                OpenAdminForm();
+            }
+            catch (Exception ex)
             {
-                MessageBox.Show("Введено некоректний email.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                MessageBox.Show($"Помилка під час реєстрації:\n{ex.Message}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            if (Database.UserExists(email))
-            {
-                MessageBox.Show("Користувач з таким email вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (Database.UsernameExists(username))
-            {
-                MessageBox.Show("Користувач з таким іменем вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            string hashedPassword = Database.HashPassword(password);
-            Database.AddUser(username, email, hashedPassword);
-
-            MessageBox.Show("Реєстрація успішна!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            OpenAdminForm();
         }
 
         private void buttonBack_Click(object sender, EventArgs e)
@@ -62,7 +70,7 @@ namespace WinFormsApp2
         private void OpenAdminForm()
         {
             var adminForm = new AdminForm();
-            adminForm.FormClosed += (s, args) => loginForm.Close(); // закриваємо LoginForm після AdminForm
+            adminForm.FormClosed += (s, args) => loginForm.Close();
             adminForm.Show();
             this.Hide();
         }
