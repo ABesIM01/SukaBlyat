@@ -69,9 +69,9 @@ namespace WinFormsApp2
 
         private void OpenAdminForm()
         {
-            var adminForm = new AdminForm();
-            adminForm.FormClosed += (s, args) => loginForm.Close();
-            adminForm.Show();
+            var ServiceForm = new Form2();
+            ServiceForm.FormClosed += (s, args) => loginForm.Close();
+            ServiceForm.Show();
             this.Hide();
         }
 

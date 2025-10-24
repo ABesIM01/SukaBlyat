@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using System;
+﻿using System;
 using System.Data;
 using System.Windows.Forms;
 
@@ -7,126 +6,105 @@ namespace WinFormsApp2
 {
     public partial class AdminForm : Form
     {
-        private string connectionString = "Data Source=services.db";
-
         public AdminForm()
         {
             InitializeComponent();
-            SQLitePCL.Batteries.Init(); // <- обов'язково
-            InitializeDatabase();
             LoadServices();
         }
 
-        private void InitializeDatabase()
-        {
-            using (var conn = new SqliteConnection(connectionString))
-            {
-                conn.Open();
-                string sql = @"CREATE TABLE IF NOT EXISTS Services (
-                                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                                ServiceName TEXT NOT NULL,
-                                Price REAL NOT NULL
-                               );";
-                using (var cmd = new SqliteCommand(sql, conn))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
+        // === Завантаження даних з бази у таблицю ===
         private void LoadServices()
         {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("ID", typeof(int));
-            dt.Columns.Add("ServiceName", typeof(string));
-            dt.Columns.Add("Price", typeof(double));
-
-            using (var conn = new Microsoft.Data.Sqlite.SqliteConnection(connectionString))
-            {
-                conn.Open();
-                string sql = "SELECT * FROM Services";
-                using (var cmd = new Microsoft.Data.Sqlite.SqliteCommand(sql, conn))
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        dt.Rows.Add(reader.GetInt32(0), reader.GetString(1), reader.GetDouble(2));
-                    }
-                }
-            }
-
-            dataGridViewServices.DataSource = dt;
+            DataTable dt = Database.GetAllServices();
+            if (dt != null)
+                dataGridViewServices.DataSource = dt;
         }
 
+        // === Додати послугу ===
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            string name = "New Service";
-            double price = 100;
+            string name = textBoxName.Text.Trim();
+            string desc = textBoxDescription.Text.Trim();
+            string price = textBoxPrice.Text.Trim();
 
-            using (var conn = new SqliteConnection(connectionString))
+            if (name == "" || price == "")
             {
-                conn.Open();
-                string sql = "INSERT INTO Services (ServiceName, Price) VALUES (@name, @price)";
-                using (var cmd = new SqliteCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@price", price);
-                    cmd.ExecuteNonQuery();
-                }
+                MessageBox.Show("Назва та ціна обов'язкові!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
+            Database.AddService(name, desc, price);
             LoadServices();
+            ClearInputs();
         }
 
+        // === Редагувати послугу ===
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            if (dataGridViewServices.SelectedRows.Count > 0)
+            if (dataGridViewServices.SelectedRows.Count == 0)
             {
-                int id = Convert.ToInt32(dataGridViewServices.SelectedRows[0].Cells["ID"].Value);
-                string newName = "Edited Service";
-                double newPrice = 200;
+                MessageBox.Show("Виберіть послугу для редагування.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                using (var conn = new SqliteConnection(connectionString))
-                {
-                    conn.Open();
-                    string sql = "UPDATE Services SET ServiceName=@name, Price=@price WHERE ID=@id";
-                    using (var cmd = new SqliteCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@name", newName);
-                        cmd.Parameters.AddWithValue("@price", newPrice);
-                        cmd.Parameters.AddWithValue("@id", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+            int id = Convert.ToInt32(dataGridViewServices.SelectedRows[0].Cells["ID"].Value);
+            string name = textBoxName.Text.Trim();
+            string desc = textBoxDescription.Text.Trim();
+            string price = textBoxPrice.Text.Trim();
 
+            if (name == "" || price == "")
+            {
+                MessageBox.Show("Назва та ціна обов'язкові!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Database.UpdateService(id, name, desc, price);
+            LoadServices();
+            ClearInputs();
+        }
+
+        // === Видалити послугу ===
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewServices.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Виберіть послугу для видалення.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int id = Convert.ToInt32(dataGridViewServices.SelectedRows[0].Cells["ID"].Value);
+            var confirm = MessageBox.Show("Ви впевнені, що хочете видалити цю послугу?",
+                "Підтвердження", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                Database.DeleteService(id);
                 LoadServices();
+                ClearInputs();
             }
         }
 
-        private void buttonDelete_Click(object sender, EventArgs e)
+        // === Вибір рядка в таблиці ===
+        private void dataGridViewServices_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridViewServices.SelectedRows.Count > 0)
             {
-                int id = Convert.ToInt32(dataGridViewServices.SelectedRows[0].Cells["ID"].Value);
-
-                using (var conn = new SqliteConnection(connectionString))
-                {
-                    conn.Open();
-                    string sql = "DELETE FROM Services WHERE ID=@id";
-                    using (var cmd = new SqliteCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@id", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-
-                LoadServices();
+                textBoxName.Text = dataGridViewServices.SelectedRows[0].Cells["name"].Value?.ToString();
+                textBoxDescription.Text = dataGridViewServices.SelectedRows[0].Cells["description"].Value?.ToString();
+                textBoxPrice.Text = dataGridViewServices.SelectedRows[0].Cells["price"].Value?.ToString();
             }
         }
 
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
             LoadServices();
+        }
+
+        private void ClearInputs()
+        {
+            textBoxName.Clear();
+            textBoxDescription.Clear();
+            textBoxPrice.Clear();
         }
     }
 }

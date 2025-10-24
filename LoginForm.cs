@@ -1,11 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Google.Apis.Auth;
 using Google.Apis.Auth.OAuth2;
-using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Auth.OAuth2.Responses;
+using Google.Apis.Util;
 using Google.Apis.Util.Store;
 
 namespace WinFormsApp2
@@ -30,23 +32,62 @@ namespace WinFormsApp2
                 return;
             }
 
-            if (!Database.UserExists(email))
+            // ✅ Тепер перевіряємо користувача + роль
+            if (Database.ValidateUser(email, password, out string role))
             {
-                MessageBox.Show("Користувача з таким email не знайдено.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (Database.ValidateUser(email, password))
-            {
-                MessageBox.Show("✅ Вхід успішний!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                var adminForm = new AdminForm();
-                adminForm.FormClosed += (s, args) => this.Close();
-                adminForm.Show();
-                this.Hide();
+                if (role == "admin")
+                {
+                    MessageBox.Show("👨‍💼 Вітаємо, адміністратор!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var adminForm = new AdminForm();
+                    adminForm.FormClosed += (s, args) => this.Close();
+                    adminForm.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("✅ Вхід успішний!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var shopForm = new Form2();
+                    shopForm.FormClosed += (s, args) => this.Close();
+                    shopForm.Show();
+                    this.Hide();
+                }
             }
             else
             {
-                MessageBox.Show("❌ Невірний пароль.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("❌ Невірний email або пароль.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // === Окремий вхід для адміністратора ===
+        private void buttonAdminLogin_Click(object sender, EventArgs e)
+        {
+            string email = textBoxEmail.Text.Trim();
+            string password = textBoxPassword.Text;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Введіть email і пароль адміністратора.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (Database.ValidateUser(email, password, out string role))
+            {
+                if (role == "admin")
+                {
+                    MessageBox.Show("👨‍💼 Вхід адміністратора успішний!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var adminForm = new AdminForm();
+                    adminForm.FormClosed += (s, args) => this.Close();
+                    adminForm.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("🚫 У вас немає прав адміністратора.", "Доступ заборонено", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("❌ Невірні дані входу.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -58,7 +99,7 @@ namespace WinFormsApp2
             this.Hide();
         }
 
-        // === Google Login — офіційний потік Microsoft/Google ===
+        // ✅ ТУТ має бути твій Google Login — усередині класу, не після дужки!
         private async void buttonGoogleLogin_Click(object sender, EventArgs e)
         {
             try
@@ -71,17 +112,20 @@ namespace WinFormsApp2
 
                 var scopes = new[] { "email", "profile", "openid" };
 
-                // Використовує офіційний LocalServerCodeReceiver — все робить сам
                 var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
                 {
                     ClientSecrets = clientSecrets,
                     Scopes = scopes,
-                    DataStore = new FileDataStore("GoogleOAuthWinForms") // зберігає токен локально
+                    DataStore = new FileDataStore("GoogleOAuthWinFormsV2", true)
                 });
 
                 var codeReceiver = new LocalServerCodeReceiver();
-                var authCode = new AuthorizationCodeInstalledApp(flow, codeReceiver);
-                var credential = await authCode.AuthorizeAsync("user", CancellationToken.None);
+                var authApp = new AuthorizationCodeInstalledApp(flow, codeReceiver);
+
+                var credential = await authApp.AuthorizeAsync("user", CancellationToken.None);
+
+                if (credential.Token.IsExpired(SystemClock.Default))
+                    await credential.RefreshTokenAsync(CancellationToken.None);
 
                 if (credential.Token == null || string.IsNullOrEmpty(credential.Token.IdToken))
                 {
@@ -89,7 +133,6 @@ namespace WinFormsApp2
                     return;
                 }
 
-                // Отримуємо дані користувача з токена
                 var payload = await GoogleJsonWebSignature.ValidateAsync(credential.Token.IdToken);
                 string email = payload.Email;
                 string name = payload.Name ?? email;
@@ -99,19 +142,18 @@ namespace WinFormsApp2
 
                 MessageBox.Show($"👋 Ласкаво просимо, {name}!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                var adminForm = new AdminForm();
-                adminForm.FormClosed += (s, args) => this.Close();
-                adminForm.Show();
+                var shopForm = new Form2();
+                shopForm.FormClosed += (s, args) => this.Close();
+                shopForm.Show();
                 this.Hide();
-            }
-            catch (TokenResponseException tex)
-            {
-                MessageBox.Show("Помилка авторизації Google: " + tex.Error.ErrorDescription, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Помилка під час входу через Google: " + ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Помилка Google авторизації: " + ex.Message,
+                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-    }
-}
+        } // ✅ кінець методу
+
+    } // ✅ кінець класу LoginForm
+} // ✅ кінець простору імен WinFormsApp2
+
