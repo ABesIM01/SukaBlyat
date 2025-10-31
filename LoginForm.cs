@@ -32,7 +32,6 @@ namespace WinFormsApp2
                 return;
             }
 
-            // ✅ Тепер перевіряємо користувача + роль
             if (Database.ValidateUser(email, password, out string role))
             {
                 if (role == "admin")
@@ -58,7 +57,7 @@ namespace WinFormsApp2
             }
         }
 
-        // === Окремий вхід для адміністратора ===
+        // === Вхід як адміністратор ===
         private void buttonAdminLogin_Click(object sender, EventArgs e)
         {
             string email = textBoxEmail.Text.Trim();
@@ -99,7 +98,7 @@ namespace WinFormsApp2
             this.Hide();
         }
 
-        // ✅ ТУТ має бути твій Google Login — усередині класу, не після дужки!
+        // === Вхід через Google ===
         private async void buttonGoogleLogin_Click(object sender, EventArgs e)
         {
             try
@@ -152,8 +151,13 @@ namespace WinFormsApp2
                 MessageBox.Show("Помилка Google авторизації: " + ex.Message,
                     "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        } // ✅ кінець методу
+        }
 
-    } // ✅ кінець класу LoginForm
-} // ✅ кінець простору імен WinFormsApp2
-
+        // === 🆕 Перехід на форму скидання пароля ===
+        private void buttonForgotPassword_Click(object sender, EventArgs e)
+        {
+            var forgotForm = new ForgotPasswordForm();
+            forgotForm.ShowDialog();
+        }
+    }
+}

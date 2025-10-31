@@ -1,84 +1,91 @@
 ﻿using System;
+using System.Data.SQLite;
 using System.Windows.Forms;
-using Microsoft.Data.Sqlite;
 
 namespace WinFormsApp2
 {
     public partial class ForgotPasswordForm : Form
     {
-        private string connectionString = "Data Source=users.db";
+        private string connectionString = "Data Source=users.db;Version=3;";
+        private string foundUsername = "";
+        private string foundEmail = "";
+        private string correctAnswer = "";
 
         public ForgotPasswordForm()
         {
             InitializeComponent();
         }
 
+        // ======== ПОШУК КОРИСТУВАЧА ========
         private void buttonSearch_Click(object sender, EventArgs e)
         {
             string username = textBoxUsername.Text.Trim();
+            string email = textBoxEmail.Text.Trim();
 
-            if (username == "")
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email))
             {
-                MessageBox.Show("Please enter a username.");
+                MessageBox.Show("Будь ласка, введіть і логін, і пошту.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            using (var conn = new SqliteConnection(connectionString))
+            using (var conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
-                string sql = "SELECT SecurityQuestion FROM Users WHERE Username=@user";
-                using (var cmd = new SqliteCommand(sql, conn))
+                string query = "SELECT question, answer FROM users WHERE username=@username AND email=@email";
+
+                using (var cmd = new SQLiteCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@user", username);
-                    var question = cmd.ExecuteScalar()?.ToString();
-                    if (question != null)
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@email", email);
+
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        labelQuestion.Text = question;
-                        textBoxAnswer.Enabled = true;
-                        buttonRecover.Enabled = true;
-                    }
-                    else
-                    {
-                        MessageBox.Show("User not found.");
+                        if (reader.Read())
+                        {
+                            labelQuestion.Text = "Контрольне запитання: " + reader["question"].ToString();
+                            correctAnswer = reader["answer"].ToString();
+                            foundUsername = username;
+                            foundEmail = email;
+
+                            textBoxAnswer.Enabled = true;
+                            buttonRecover.Enabled = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Користувача з такими даними не знайдено.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
         }
 
+        // ======== ВІДНОВЛЕННЯ ПАРОЛЯ ========
         private void buttonRecover_Click(object sender, EventArgs e)
         {
-            string username = textBoxUsername.Text.Trim();
-            string answer = textBoxAnswer.Text.Trim();
-
-            if (answer == "")
+            if (string.IsNullOrEmpty(textBoxAnswer.Text))
             {
-                MessageBox.Show("Enter your security answer.");
+                MessageBox.Show("Введіть відповідь на контрольне запитання.", "Попередження", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            using (var conn = new SqliteConnection(connectionString))
+            if (textBoxAnswer.Text.Trim().ToLower() != correctAnswer.ToLower())
             {
-                conn.Open();
-                string sql = "SELECT Password FROM Users WHERE Username=@user AND SecurityAnswer=@ans";
-                using (var cmd = new SqliteCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@user", username);
-                    cmd.Parameters.AddWithValue("@ans", answer);
-                    var password = cmd.ExecuteScalar()?.ToString();
+                MessageBox.Show("Неправильна відповідь!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-                    if (password != null)
-                    {
-                        MessageBox.Show($"Your password is: {password}");
-                        this.Close();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Incorrect answer.");
-                    }
-                }
+            // Якщо відповідь правильна — відкриваємо форму зміни пароля
+            ResetPasswordForm resetForm = new ResetPasswordForm(foundUsername, foundEmail);
+            DialogResult result = resetForm.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                MessageBox.Show("Пароль успішно змінено!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
             }
         }
 
+        // ======== СКАСУВАТИ ========
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.Close();
