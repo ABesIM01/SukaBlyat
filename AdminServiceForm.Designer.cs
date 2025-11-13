@@ -2,7 +2,7 @@
 
 namespace WinFormsApp2
 {
-    partial class AdminForm
+    partial class AdminServiceForm
     {
         private DataGridView dataGridViewServices;
         private Label labelName;
@@ -15,6 +15,8 @@ namespace WinFormsApp2
         private Button buttonEdit;
         private Button buttonDelete;
         private Button buttonRefresh;
+        private Button buttonUsers;
+        private Button buttonTelephonia;   // ← НОВА КНОПКА!
 
         private void InitializeComponent()
         {
@@ -29,6 +31,8 @@ namespace WinFormsApp2
             buttonEdit = new Button();
             buttonDelete = new Button();
             buttonRefresh = new Button();
+            buttonUsers = new Button();
+            buttonTelephonia = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewServices).BeginInit();
             SuspendLayout();
             // 
@@ -58,7 +62,7 @@ namespace WinFormsApp2
             // 
             labelDescription.Location = new Point(506, 70);
             labelDescription.Name = "labelDescription";
-            labelDescription.Size = new Size(64, 23);
+            labelDescription.Size = new Size(78, 23);
             labelDescription.TabIndex = 3;
             labelDescription.Text = "Опис:";
             // 
@@ -66,7 +70,7 @@ namespace WinFormsApp2
             // 
             labelPrice.Location = new Point(506, 185);
             labelPrice.Name = "labelPrice";
-            labelPrice.Size = new Size(64, 23);
+            labelPrice.Size = new Size(100, 23);
             labelPrice.TabIndex = 5;
             labelPrice.Text = "Ціна:";
             // 
@@ -74,7 +78,7 @@ namespace WinFormsApp2
             // 
             textBoxName.Location = new Point(590, 25);
             textBoxName.Name = "textBoxName";
-            textBoxName.Size = new Size(180, 27);
+            textBoxName.Size = new Size(100, 27);
             textBoxName.TabIndex = 2;
             // 
             // textBoxDescription
@@ -96,7 +100,7 @@ namespace WinFormsApp2
             // 
             buttonAdd.Location = new Point(520, 230);
             buttonAdd.Name = "buttonAdd";
-            buttonAdd.Size = new Size(80, 35);
+            buttonAdd.Size = new Size(75, 23);
             buttonAdd.TabIndex = 7;
             buttonAdd.Text = "➕ Додати";
             buttonAdd.Click += buttonAdd_Click;
@@ -105,7 +109,7 @@ namespace WinFormsApp2
             // 
             buttonEdit.Location = new Point(610, 230);
             buttonEdit.Name = "buttonEdit";
-            buttonEdit.Size = new Size(100, 35);
+            buttonEdit.Size = new Size(75, 23);
             buttonEdit.TabIndex = 8;
             buttonEdit.Text = "✏️ Редагувати";
             buttonEdit.Click += buttonEdit_Click;
@@ -114,7 +118,7 @@ namespace WinFormsApp2
             // 
             buttonDelete.Location = new Point(720, 230);
             buttonDelete.Name = "buttonDelete";
-            buttonDelete.Size = new Size(90, 35);
+            buttonDelete.Size = new Size(75, 23);
             buttonDelete.TabIndex = 9;
             buttonDelete.Text = "❌ Видалити";
             buttonDelete.Click += buttonDelete_Click;
@@ -128,9 +132,29 @@ namespace WinFormsApp2
             buttonRefresh.Text = "🔄 Оновити";
             buttonRefresh.Click += buttonRefresh_Click;
             // 
-            // AdminForm
+            // buttonUsers
             // 
-            ClientSize = new Size(830, 340);
+            buttonUsers.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            buttonUsers.Location = new Point(520, 280);
+            buttonUsers.Name = "buttonUsers";
+            buttonUsers.Size = new Size(290, 35);
+            buttonUsers.TabIndex = 11;
+            buttonUsers.Text = "👤 Керування користувачами";
+            buttonUsers.Click += buttonUsers_Click;
+            // 
+            // buttonTelephonia
+            // 
+            buttonTelephonia.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            buttonTelephonia.Location = new Point(520, 325);
+            buttonTelephonia.Name = "buttonTelephonia";
+            buttonTelephonia.Size = new Size(290, 35);
+            buttonTelephonia.TabIndex = 12;
+            buttonTelephonia.Text = "📞 Менеджер дзвінків";
+            buttonTelephonia.Click += buttonTelephonia_Click;
+            // 
+            // AdminServiceForm
+            // 
+            ClientSize = new Size(840, 380);
             Controls.Add(dataGridViewServices);
             Controls.Add(labelName);
             Controls.Add(textBoxName);
@@ -142,7 +166,9 @@ namespace WinFormsApp2
             Controls.Add(buttonEdit);
             Controls.Add(buttonDelete);
             Controls.Add(buttonRefresh);
-            Name = "AdminForm";
+            Controls.Add(buttonUsers);
+            Controls.Add(buttonTelephonia);
+            Name = "AdminServiceForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Панель адміністратора — Керування послугами";
             ((System.ComponentModel.ISupportInitialize)dataGridViewServices).EndInit();

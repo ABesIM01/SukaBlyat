@@ -9,6 +9,8 @@ using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Util;
 using Google.Apis.Util.Store;
+using DatabaseLibrary;
+using Forms;
 
 namespace WinFormsApp2
 {
@@ -37,7 +39,7 @@ namespace WinFormsApp2
                 if (role == "admin")
                 {
                     MessageBox.Show("👨‍💼 Вітаємо, адміністратор!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    var adminForm = new AdminForm();
+                    var adminForm = new AdminServiceForm();
                     adminForm.FormClosed += (s, args) => this.Close();
                     adminForm.Show();
                     this.Hide();
@@ -45,7 +47,7 @@ namespace WinFormsApp2
                 else
                 {
                     MessageBox.Show("✅ Вхід успішний!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    var shopForm = new Form2();
+                    var shopForm = new UseServiceTg();
                     shopForm.FormClosed += (s, args) => this.Close();
                     shopForm.Show();
                     this.Hide();
@@ -74,7 +76,7 @@ namespace WinFormsApp2
                 if (role == "admin")
                 {
                     MessageBox.Show("👨‍💼 Вхід адміністратора успішний!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    var adminForm = new AdminForm();
+                    var adminForm = new AdminServiceForm();
                     adminForm.FormClosed += (s, args) => this.Close();
                     adminForm.Show();
                     this.Hide();
@@ -141,7 +143,7 @@ namespace WinFormsApp2
 
                 MessageBox.Show($"👋 Ласкаво просимо, {name}!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                var shopForm = new Form2();
+                var shopForm = new UseServiceTg();
                 shopForm.FormClosed += (s, args) => this.Close();
                 shopForm.Show();
                 this.Hide();

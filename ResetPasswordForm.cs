@@ -10,7 +10,7 @@ namespace WinFormsApp2
     {
         private string username;
         private string email;
-        private string connectionString = "Data Source=users.db;Version=3;";
+        private string connectionString = "Data Source=app.db;Version=3;";
 
         public ResetPasswordForm(string username, string email)
         {
@@ -42,7 +42,7 @@ namespace WinFormsApp2
             using (var conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
-                string update = "UPDATE users SET password_hash=@hash, salt=@salt WHERE username=@username AND email=@email";
+                string update = "UPDATE users SET password=@hash, salt=@salt WHERE username=@username AND email=@email";
                 using (var cmd = new SQLiteCommand(update, conn))
                 {
                     cmd.Parameters.AddWithValue("@hash", newHash);

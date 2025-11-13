@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace WinFormsApp2
 {
-    public partial class Form2 : Form
+    public partial class UserService : Form
     {
         private ComboBox comboBoxServices;
         private Label labelName;

@@ -28,17 +28,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Auth" Version="1.62.0" />
-    <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.62.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.72.0" />
+    <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.68.0.1869" />
     <PackageReference Include="Guna.UI2.WinForms" Version="2.0.4.7" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="10.0.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
+    <PackageReference Include="SQLitePCLRaw.config.e_sqlite3" Version="3.0.2" />
     <PackageReference Include="System.Data.SQLite" Version="2.0.2" />
     <PackageReference Include="TECIT.TBarCode" Version="11.17.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Database\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Database Labrary\DatabaseClass.csproj" />
+    <ProjectReference Include="..\SreviceClass\SreviceClass.csproj" />
+    <ProjectReference Include="..\telegram\telegram.csproj" />
+    <ProjectReference Include="..\Token\TokenClass.csproj" />
   </ItemGroup>
 
   <ItemGroup>

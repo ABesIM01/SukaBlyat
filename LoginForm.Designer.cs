@@ -24,7 +24,7 @@ namespace WinFormsApp2
             buttonRegister = new Button();
             buttonGoogleLogin = new Button();
             buttonAdminLogin = new Button();
-            buttonForgotPassword = new Button(); // 🔹 ініціалізація
+            buttonForgotPassword = new Button();
             SuspendLayout();
             // 
             // labelEmail
@@ -69,15 +69,6 @@ namespace WinFormsApp2
             buttonLogin.Text = "Увійти";
             buttonLogin.Click += buttonLogin_Click;
             // 
-            // buttonAdminLogin
-            // 
-            buttonAdminLogin.Location = new Point(130, 120);
-            buttonAdminLogin.Name = "buttonAdminLogin";
-            buttonAdminLogin.Size = new Size(218, 30);
-            buttonAdminLogin.TabIndex = 5;
-            buttonAdminLogin.Text = "👨‍💼 Увійти як адміністратор";
-            buttonAdminLogin.Click += buttonAdminLogin_Click;
-            // 
             // buttonRegister
             // 
             buttonRegister.Location = new Point(40, 170);
@@ -96,9 +87,18 @@ namespace WinFormsApp2
             buttonGoogleLogin.Text = "🔑 Вхід через Google";
             buttonGoogleLogin.Click += buttonGoogleLogin_Click;
             // 
+            // buttonAdminLogin
+            // 
+            buttonAdminLogin.Location = new Point(130, 120);
+            buttonAdminLogin.Name = "buttonAdminLogin";
+            buttonAdminLogin.Size = new Size(218, 30);
+            buttonAdminLogin.TabIndex = 5;
+            buttonAdminLogin.Text = "👨‍💼 Увійти як адміністратор";
+            buttonAdminLogin.Click += buttonAdminLogin_Click;
+            // 
             // buttonForgotPassword
             // 
-            buttonForgotPassword.Location = new Point(220, 210);
+            buttonForgotPassword.Location = new Point(40, 213);
             buttonForgotPassword.Name = "buttonForgotPassword";
             buttonForgotPassword.Size = new Size(130, 25);
             buttonForgotPassword.TabIndex = 8;
@@ -116,7 +116,7 @@ namespace WinFormsApp2
             Controls.Add(buttonAdminLogin);
             Controls.Add(buttonRegister);
             Controls.Add(buttonGoogleLogin);
-            Controls.Add(buttonForgotPassword); // 🔹 додано на форму
+            Controls.Add(buttonForgotPassword);
             Name = "LoginForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Авторизація";

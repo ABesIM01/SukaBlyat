@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
+using DatabaseLibrary;
 
 namespace WinFormsApp2
 {
-    public partial class AdminForm : Form
+    public partial class AdminServiceForm : Form
     {
-        public AdminForm()
+        public AdminServiceForm()
         {
             InitializeComponent();
             LoadServices();
         }
 
-        // === Завантаження даних з бази у таблицю ===
         private void LoadServices()
         {
             DataTable dt = Database.GetAllServices();
@@ -20,7 +20,6 @@ namespace WinFormsApp2
                 dataGridViewServices.DataSource = dt;
         }
 
-        // === Додати послугу ===
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             string name = textBoxName.Text.Trim();
@@ -38,7 +37,6 @@ namespace WinFormsApp2
             ClearInputs();
         }
 
-        // === Редагувати послугу ===
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             if (dataGridViewServices.SelectedRows.Count == 0)
@@ -63,7 +61,6 @@ namespace WinFormsApp2
             ClearInputs();
         }
 
-        // === Видалити послугу ===
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             if (dataGridViewServices.SelectedRows.Count == 0)
@@ -84,7 +81,6 @@ namespace WinFormsApp2
             }
         }
 
-        // === Вибір рядка в таблиці ===
         private void dataGridViewServices_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridViewServices.SelectedRows.Count > 0)
@@ -98,6 +94,19 @@ namespace WinFormsApp2
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
             LoadServices();
+        }
+
+        private void buttonUsers_Click(object sender, EventArgs e)
+        {
+            AdminUsersForm form = new AdminUsersForm();
+            form.Show();
+            this.Hide();
+        }
+
+        private void buttonTelephonia_Click(object sender, EventArgs e)
+        {
+            Telephonia phoneForm = new Telephonia();
+            phoneForm.Show();
         }
 
         private void ClearInputs()

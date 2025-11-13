@@ -6,10 +6,9 @@ namespace WinFormsApp2
 {
     public partial class ForgotPasswordForm : Form
     {
-        private string connectionString = "Data Source=users.db;Version=3;";
+        private string connectionString = "Data Source=app.db;Version=3;";
         private string foundUsername = "";
         private string foundEmail = "";
-        private string correctAnswer = "";
 
         public ForgotPasswordForm()
         {
@@ -31,29 +30,29 @@ namespace WinFormsApp2
             using (var conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT question, answer FROM users WHERE username=@username AND email=@email";
+                string query = "SELECT id FROM users WHERE username=@username AND email=@email";
 
                 using (var cmd = new SQLiteCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@email", email);
 
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            labelQuestion.Text = "Контрольне запитання: " + reader["question"].ToString();
-                            correctAnswer = reader["answer"].ToString();
-                            foundUsername = username;
-                            foundEmail = email;
+                    var result = cmd.ExecuteScalar();
 
-                            textBoxAnswer.Enabled = true;
-                            buttonRecover.Enabled = true;
-                        }
-                        else
-                        {
-                            MessageBox.Show("Користувача з такими даними не знайдено.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                    if (result != null)
+                    {
+                        foundUsername = username;
+                        foundEmail = email;
+
+                        MessageBox.Show("Користувача знайдено! Тепер можна змінити пароль.",
+                            "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        buttonRecover.Enabled = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Користувача з такими даними не знайдено.",
+                            "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -62,25 +61,21 @@ namespace WinFormsApp2
         // ======== ВІДНОВЛЕННЯ ПАРОЛЯ ========
         private void buttonRecover_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBoxAnswer.Text))
+            if (string.IsNullOrEmpty(foundUsername) || string.IsNullOrEmpty(foundEmail))
             {
-                MessageBox.Show("Введіть відповідь на контрольне запитання.", "Попередження", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Спочатку знайдіть користувача.", "Помилка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (textBoxAnswer.Text.Trim().ToLower() != correctAnswer.ToLower())
-            {
-                MessageBox.Show("Неправильна відповідь!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // Якщо відповідь правильна — відкриваємо форму зміни пароля
+            // Відкриваємо форму зміни пароля
             ResetPasswordForm resetForm = new ResetPasswordForm(foundUsername, foundEmail);
             DialogResult result = resetForm.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                MessageBox.Show("Пароль успішно змінено!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Пароль успішно змінено!",
+                    "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
             }
         }

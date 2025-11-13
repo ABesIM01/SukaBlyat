@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Guna.UI2.WinForms;
+using DatabaseLibrary;
 
 namespace WinFormsApp2
 {
@@ -69,7 +70,7 @@ namespace WinFormsApp2
 
         private void OpenAdminForm()
         {
-            var ServiceForm = new Form2();
+            var ServiceForm = new UserService();
             ServiceForm.FormClosed += (s, args) => loginForm.Close();
             ServiceForm.Show();
             this.Hide();

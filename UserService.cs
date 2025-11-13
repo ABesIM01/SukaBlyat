@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
+using DatabaseLibrary;
+
 
 namespace WinFormsApp2
 {
-    public partial class Form2 : Form
+    public partial class UserService : Form
     {
-        public Form2()
+        public UserService()
         {
             InitializeComponent();
             LoadServicesFromDB();   // ✅ завантажуємо сервіси з бази
