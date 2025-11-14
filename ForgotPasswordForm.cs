@@ -2,7 +2,7 @@
 using System.Data.SQLite;
 using System.Windows.Forms;
 
-namespace WinFormsApp2
+namespace Forms
 {
     public partial class ForgotPasswordForm : Form
     {

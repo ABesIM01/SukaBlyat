@@ -1,4 +1,4 @@
-﻿namespace WinFormsApp2
+﻿namespace Forms
 {
     partial class AdminUsersForm
     {

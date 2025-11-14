@@ -12,7 +12,7 @@ using Google.Apis.Util.Store;
 using DatabaseLibrary;
 using Forms;
 
-namespace WinFormsApp2
+namespace Forms
 {
     public partial class LoginForm : Form
     {

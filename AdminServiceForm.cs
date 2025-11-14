@@ -3,7 +3,7 @@ using System.Data;
 using System.Windows.Forms;
 using DatabaseLibrary;
 
-namespace WinFormsApp2
+namespace Forms
 {
     public partial class AdminServiceForm : Form
     {

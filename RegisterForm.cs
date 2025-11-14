@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using Guna.UI2.WinForms;
 using DatabaseLibrary;
 
-namespace WinFormsApp2
+namespace Forms
 {
     public partial class RegisterForm : Form
     {
@@ -70,7 +70,7 @@ namespace WinFormsApp2
 
         private void OpenAdminForm()
         {
-            var ServiceForm = new UserService();
+            var ServiceForm = new UseServiceTg();
             ServiceForm.FormClosed += (s, args) => loginForm.Close();
             ServiceForm.Show();
             this.Hide();

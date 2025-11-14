@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
-namespace WinFormsApp2
+namespace Forms
 {
     public partial class ResetPasswordForm : Form
     {

@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Database\**" />
+    <EmbeddedResource Remove="Database\**" />
+    <None Remove="Database\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\arrow_back_24dp_E3E3E3.png" />
     <None Remove="Resources\google_icon.png" />
     <None Remove="Resources\login_24dp_E3E3E3.png" />
@@ -37,10 +43,6 @@
     <PackageReference Include="SQLitePCLRaw.config.e_sqlite3" Version="3.0.2" />
     <PackageReference Include="System.Data.SQLite" Version="2.0.2" />
     <PackageReference Include="TECIT.TBarCode" Version="11.17.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Database\" />
   </ItemGroup>
 
   <ItemGroup>

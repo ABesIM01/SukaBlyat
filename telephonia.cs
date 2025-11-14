@@ -3,8 +3,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using DatabaseClass;
 
-namespace WinFormsApp2
+namespace Forms
 {
     public partial class Telephonia : Form
     {

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace WinFormsApp2
+namespace Forms
 {
     partial class LoginForm
     {

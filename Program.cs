@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using WinFormsApp2;
 using DatabaseLibrary;
 
-namespace WinFormsApp2 
+namespace Forms
 {
     static class Program
     {
