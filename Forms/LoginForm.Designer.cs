@@ -52,6 +52,7 @@ namespace Forms
 
         private void InitializeComponent()
         {
+            components = new Container();
             panelContainer = new Panel();
             panelDecorTop = new Panel();
             panelDecorBottom = new Panel();
@@ -76,16 +77,235 @@ namespace Forms
             linkForgotPassword = new LinkLabel();
             panelFooter = new Panel();
             labelFooter = new Label();
-            timerFocus = new System.Windows.Forms.Timer();
-            timerHover = new System.Windows.Forms.Timer();
+            timerFocus = new System.Windows.Forms.Timer(components);
+            timerHover = new System.Windows.Forms.Timer(components);
             panelLoading = new Panel();
             pictureBoxLoading = new PictureBox();
             labelVersion = new Label();
             panelLanguage = new Panel();
             buttonLanguage = new Button();
-
+            ((ISupportInitialize)pictureBoxIcon).BeginInit();
+            ((ISupportInitialize)pictureBoxEmailIcon).BeginInit();
+            ((ISupportInitialize)pictureBoxPasswordIcon).BeginInit();
+            ((ISupportInitialize)pictureBoxLoading).BeginInit();
             SuspendLayout();
-            InitializeComponents();
+            // 
+            // panelContainer
+            // 
+            panelContainer.Location = new Point(0, 0);
+            panelContainer.Name = "panelContainer";
+            panelContainer.Size = new Size(200, 100);
+            panelContainer.TabIndex = 0;
+            // 
+            // panelDecorTop
+            // 
+            panelDecorTop.Location = new Point(0, 0);
+            panelDecorTop.Name = "panelDecorTop";
+            panelDecorTop.Size = new Size(200, 100);
+            panelDecorTop.TabIndex = 0;
+            // 
+            // panelDecorBottom
+            // 
+            panelDecorBottom.Location = new Point(0, 0);
+            panelDecorBottom.Name = "panelDecorBottom";
+            panelDecorBottom.Size = new Size(200, 100);
+            panelDecorBottom.TabIndex = 0;
+            // 
+            // panelHeader
+            // 
+            panelHeader.Location = new Point(0, 0);
+            panelHeader.Name = "panelHeader";
+            panelHeader.Size = new Size(200, 100);
+            panelHeader.TabIndex = 0;
+            // 
+            // pictureBoxIcon
+            // 
+            pictureBoxIcon.Location = new Point(0, 0);
+            pictureBoxIcon.Name = "pictureBoxIcon";
+            pictureBoxIcon.Size = new Size(100, 50);
+            pictureBoxIcon.TabIndex = 0;
+            pictureBoxIcon.TabStop = false;
+            // 
+            // labelTitle
+            // 
+            labelTitle.Location = new Point(0, 0);
+            labelTitle.Name = "labelTitle";
+            labelTitle.Size = new Size(100, 23);
+            labelTitle.TabIndex = 0;
+            // 
+            // labelSubtitle
+            // 
+            labelSubtitle.Location = new Point(0, 0);
+            labelSubtitle.Name = "labelSubtitle";
+            labelSubtitle.Size = new Size(100, 23);
+            labelSubtitle.TabIndex = 0;
+            // 
+            // panelEmail
+            // 
+            panelEmail.Location = new Point(0, 0);
+            panelEmail.Name = "panelEmail";
+            panelEmail.Size = new Size(200, 100);
+            panelEmail.TabIndex = 0;
+            // 
+            // pictureBoxEmailIcon
+            // 
+            pictureBoxEmailIcon.Location = new Point(0, 0);
+            pictureBoxEmailIcon.Name = "pictureBoxEmailIcon";
+            pictureBoxEmailIcon.Size = new Size(100, 50);
+            pictureBoxEmailIcon.TabIndex = 0;
+            pictureBoxEmailIcon.TabStop = false;
+            // 
+            // labelEmail
+            // 
+            labelEmail.Location = new Point(0, 0);
+            labelEmail.Name = "labelEmail";
+            labelEmail.Size = new Size(100, 23);
+            labelEmail.TabIndex = 0;
+            // 
+            // textBoxEmail
+            // 
+            textBoxEmail.Location = new Point(0, 0);
+            textBoxEmail.Name = "textBoxEmail";
+            textBoxEmail.Size = new Size(100, 27);
+            textBoxEmail.TabIndex = 0;
+            // 
+            // panelPassword
+            // 
+            panelPassword.Location = new Point(0, 0);
+            panelPassword.Name = "panelPassword";
+            panelPassword.Size = new Size(200, 100);
+            panelPassword.TabIndex = 0;
+            // 
+            // pictureBoxPasswordIcon
+            // 
+            pictureBoxPasswordIcon.Location = new Point(0, 0);
+            pictureBoxPasswordIcon.Name = "pictureBoxPasswordIcon";
+            pictureBoxPasswordIcon.Size = new Size(100, 50);
+            pictureBoxPasswordIcon.TabIndex = 0;
+            pictureBoxPasswordIcon.TabStop = false;
+            // 
+            // labelPassword
+            // 
+            labelPassword.Location = new Point(0, 0);
+            labelPassword.Name = "labelPassword";
+            labelPassword.Size = new Size(100, 23);
+            labelPassword.TabIndex = 0;
+            // 
+            // textBoxPassword
+            // 
+            textBoxPassword.Location = new Point(0, 0);
+            textBoxPassword.Name = "textBoxPassword";
+            textBoxPassword.Size = new Size(100, 27);
+            textBoxPassword.TabIndex = 0;
+            // 
+            // buttonLogin
+            // 
+            buttonLogin.Location = new Point(0, 0);
+            buttonLogin.Name = "buttonLogin";
+            buttonLogin.Size = new Size(75, 23);
+            buttonLogin.TabIndex = 0;
+            // 
+            // buttonAdminLogin
+            // 
+            buttonAdminLogin.Location = new Point(0, 0);
+            buttonAdminLogin.Name = "buttonAdminLogin";
+            buttonAdminLogin.Size = new Size(75, 23);
+            buttonAdminLogin.TabIndex = 0;
+            // 
+            // panelDivider
+            // 
+            panelDivider.Location = new Point(0, 0);
+            panelDivider.Name = "panelDivider";
+            panelDivider.Size = new Size(200, 100);
+            panelDivider.TabIndex = 0;
+            // 
+            // labelOr
+            // 
+            labelOr.Location = new Point(0, 0);
+            labelOr.Name = "labelOr";
+            labelOr.Size = new Size(100, 23);
+            labelOr.TabIndex = 0;
+            // 
+            // buttonRegister
+            // 
+            buttonRegister.Location = new Point(0, 0);
+            buttonRegister.Name = "buttonRegister";
+            buttonRegister.Size = new Size(75, 23);
+            buttonRegister.TabIndex = 0;
+            // 
+            // buttonGoogleLogin
+            // 
+            buttonGoogleLogin.Location = new Point(0, 0);
+            buttonGoogleLogin.Name = "buttonGoogleLogin";
+            buttonGoogleLogin.Size = new Size(75, 23);
+            buttonGoogleLogin.TabIndex = 0;
+            // 
+            // linkForgotPassword
+            // 
+            linkForgotPassword.Location = new Point(0, 0);
+            linkForgotPassword.Name = "linkForgotPassword";
+            linkForgotPassword.Size = new Size(100, 23);
+            linkForgotPassword.TabIndex = 0;
+            // 
+            // panelFooter
+            // 
+            panelFooter.Location = new Point(0, 0);
+            panelFooter.Name = "panelFooter";
+            panelFooter.Size = new Size(200, 100);
+            panelFooter.TabIndex = 0;
+            // 
+            // labelFooter
+            // 
+            labelFooter.Location = new Point(0, 0);
+            labelFooter.Name = "labelFooter";
+            labelFooter.Size = new Size(100, 23);
+            labelFooter.TabIndex = 0;
+            // 
+            // panelLoading
+            // 
+            panelLoading.Location = new Point(0, 0);
+            panelLoading.Name = "panelLoading";
+            panelLoading.Size = new Size(200, 100);
+            panelLoading.TabIndex = 0;
+            // 
+            // pictureBoxLoading
+            // 
+            pictureBoxLoading.Location = new Point(0, 0);
+            pictureBoxLoading.Name = "pictureBoxLoading";
+            pictureBoxLoading.Size = new Size(100, 50);
+            pictureBoxLoading.TabIndex = 0;
+            pictureBoxLoading.TabStop = false;
+            // 
+            // labelVersion
+            // 
+            labelVersion.Location = new Point(0, 0);
+            labelVersion.Name = "labelVersion";
+            labelVersion.Size = new Size(100, 23);
+            labelVersion.TabIndex = 0;
+            // 
+            // panelLanguage
+            // 
+            panelLanguage.Location = new Point(0, 0);
+            panelLanguage.Name = "panelLanguage";
+            panelLanguage.Size = new Size(200, 100);
+            panelLanguage.TabIndex = 0;
+            // 
+            // buttonLanguage
+            // 
+            buttonLanguage.Location = new Point(0, 0);
+            buttonLanguage.Name = "buttonLanguage";
+            buttonLanguage.Size = new Size(75, 23);
+            buttonLanguage.TabIndex = 0;
+            // 
+            // LoginForm
+            // 
+            ClientSize = new Size(282, 253);
+            Name = "LoginForm";
+            ((ISupportInitialize)pictureBoxIcon).EndInit();
+            ((ISupportInitialize)pictureBoxEmailIcon).EndInit();
+            ((ISupportInitialize)pictureBoxPasswordIcon).EndInit();
+            ((ISupportInitialize)pictureBoxLoading).EndInit();
+            ResumeLayout(false);
         }
 
         private void InitializeComponents()
@@ -1157,5 +1377,6 @@ namespace Forms
                 timer.Start();
             }
         }
+        private IContainer components;
     }
 }

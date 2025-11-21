@@ -21,158 +21,163 @@
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
+
             base.Dispose(disposing);
         }
 
         private void InitializeComponent()
         {
-            this.dataGridViewUsers = new System.Windows.Forms.DataGridView();
-            this.labelUsername = new System.Windows.Forms.Label();
-            this.textBoxUsername = new System.Windows.Forms.TextBox();
-            this.labelEmail = new System.Windows.Forms.Label();
-            this.textBoxEmail = new System.Windows.Forms.TextBox();
-            this.labelPassword = new System.Windows.Forms.Label();
-            this.textBoxPassword = new System.Windows.Forms.TextBox();
-            this.labelRole = new System.Windows.Forms.Label();
-            this.comboRole = new System.Windows.Forms.ComboBox();
-            this.buttonAdd = new System.Windows.Forms.Button();
-            this.buttonEdit = new System.Windows.Forms.Button();
-            this.buttonDelete = new System.Windows.Forms.Button();
-            this.buttonRefresh = new System.Windows.Forms.Button();
-
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUsers)).BeginInit();
-            this.SuspendLayout();
-
+            dataGridViewUsers = new DataGridView();
+            labelUsername = new Label();
+            textBoxUsername = new TextBox();
+            labelEmail = new Label();
+            textBoxEmail = new TextBox();
+            labelPassword = new Label();
+            textBoxPassword = new TextBox();
+            labelRole = new Label();
+            comboRole = new ComboBox();
+            buttonAdd = new Button();
+            buttonEdit = new Button();
+            buttonDelete = new Button();
+            buttonRefresh = new Button();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewUsers).BeginInit();
+            SuspendLayout();
             // 
             // dataGridViewUsers
             // 
-            this.dataGridViewUsers.AllowUserToAddRows = false;
-            this.dataGridViewUsers.AllowUserToDeleteRows = false;
-            this.dataGridViewUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridViewUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewUsers.Location = new System.Drawing.Point(12, 12);
-            this.dataGridViewUsers.MultiSelect = false;
-            this.dataGridViewUsers.Name = "dataGridViewUsers";
-            this.dataGridViewUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewUsers.Size = new System.Drawing.Size(560, 300);
-
-            this.dataGridViewUsers.SelectionChanged += new System.EventHandler(this.dataGridViewUsers_SelectionChanged);
-
+            dataGridViewUsers.AllowUserToAddRows = false;
+            dataGridViewUsers.AllowUserToDeleteRows = false;
+            dataGridViewUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewUsers.ColumnHeadersHeight = 29;
+            dataGridViewUsers.Location = new Point(12, 12);
+            dataGridViewUsers.Name = "dataGridViewUsers";
+            dataGridViewUsers.ReadOnly = true;
+            dataGridViewUsers.RowHeadersWidth = 51;
+            dataGridViewUsers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewUsers.Size = new Size(560, 500);
+            dataGridViewUsers.TabIndex = 0;
+            dataGridViewUsers.SelectionChanged += dataGridViewUsers_SelectionChanged;
             // 
             // labelUsername
             // 
-            this.labelUsername.Text = "Логін:";
-            this.labelUsername.Location = new System.Drawing.Point(590, 20);
-            this.labelUsername.AutoSize = true;
-
+            labelUsername.Location = new Point(590, 12);
+            labelUsername.Name = "labelUsername";
+            labelUsername.Size = new Size(100, 23);
+            labelUsername.TabIndex = 1;
+            labelUsername.Text = "Логін:";
             // 
             // textBoxUsername
             // 
-            this.textBoxUsername.Location = new System.Drawing.Point(590, 40);
-            this.textBoxUsername.Size = new System.Drawing.Size(200, 27);
-
+            textBoxUsername.Location = new Point(590, 40);
+            textBoxUsername.Name = "textBoxUsername";
+            textBoxUsername.Size = new Size(220, 27);
+            textBoxUsername.TabIndex = 2;
             // 
             // labelEmail
             // 
-            this.labelEmail.Text = "Email:";
-            this.labelEmail.Location = new System.Drawing.Point(590, 80);
-            this.labelEmail.AutoSize = true;
-
+            labelEmail.Location = new Point(590, 70);
+            labelEmail.Name = "labelEmail";
+            labelEmail.Size = new Size(100, 23);
+            labelEmail.TabIndex = 3;
+            labelEmail.Text = "Email:";
             // 
             // textBoxEmail
             // 
-            this.textBoxEmail.Location = new System.Drawing.Point(590, 100);
-            this.textBoxEmail.Size = new System.Drawing.Size(200, 27);
-
+            textBoxEmail.Location = new Point(590, 100);
+            textBoxEmail.Name = "textBoxEmail";
+            textBoxEmail.Size = new Size(220, 27);
+            textBoxEmail.TabIndex = 4;
             // 
             // labelPassword
             // 
-            this.labelPassword.Text = "Новий пароль:";
-            this.labelPassword.Location = new System.Drawing.Point(590, 140);
-            this.labelPassword.AutoSize = true;
-
+            labelPassword.Location = new Point(590, 130);
+            labelPassword.Name = "labelPassword";
+            labelPassword.Size = new Size(100, 23);
+            labelPassword.TabIndex = 5;
+            labelPassword.Text = "Новий пароль:";
             // 
             // textBoxPassword
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(590, 160);
-            this.textBoxPassword.Size = new System.Drawing.Size(200, 27);
-
+            textBoxPassword.Location = new Point(590, 160);
+            textBoxPassword.Name = "textBoxPassword";
+            textBoxPassword.Size = new Size(220, 27);
+            textBoxPassword.TabIndex = 6;
             // 
             // labelRole
             // 
-            this.labelRole.Text = "Роль:";
-            this.labelRole.Location = new System.Drawing.Point(590, 200);
-            this.labelRole.AutoSize = true;
-
+            labelRole.Location = new Point(590, 190);
+            labelRole.Name = "labelRole";
+            labelRole.Size = new Size(100, 23);
+            labelRole.TabIndex = 7;
+            labelRole.Text = "Роль:";
             // 
             // comboRole
             // 
-            this.comboRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboRole.Items.AddRange(new object[] {
-                "admin",
-                "user"
-            });
-            this.comboRole.Location = new System.Drawing.Point(590, 220);
-            this.comboRole.Size = new System.Drawing.Size(200, 28);
-
+            comboRole.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboRole.Items.AddRange(new object[] { "admin", "user" });
+            comboRole.Location = new Point(590, 220);
+            comboRole.Name = "comboRole";
+            comboRole.Size = new Size(220, 28);
+            comboRole.TabIndex = 8;
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Text = "Додати";
-            this.buttonAdd.Location = new System.Drawing.Point(590, 270);
-            this.buttonAdd.Size = new System.Drawing.Size(90, 35);
-            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
-
+            buttonAdd.Location = new Point(590, 270);
+            buttonAdd.Name = "buttonAdd";
+            buttonAdd.Size = new Size(90, 35);
+            buttonAdd.TabIndex = 9;
+            buttonAdd.Text = "Додати";
+            buttonAdd.Click += buttonAdd_Click;
             // 
             // buttonEdit
             // 
-            this.buttonEdit.Text = "Редагувати";
-            this.buttonEdit.Location = new System.Drawing.Point(700, 270);
-            this.buttonEdit.Size = new System.Drawing.Size(110, 35);
-            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
-
+            buttonEdit.Location = new Point(700, 270);
+            buttonEdit.Name = "buttonEdit";
+            buttonEdit.Size = new Size(110, 35);
+            buttonEdit.TabIndex = 10;
+            buttonEdit.Text = "Редагувати";
+            buttonEdit.Click += buttonEdit_Click;
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Text = "Видалити";
-            this.buttonDelete.Location = new System.Drawing.Point(590, 315);
-            this.buttonDelete.Size = new System.Drawing.Size(90, 35);
-            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
-
+            buttonDelete.Location = new Point(590, 315);
+            buttonDelete.Name = "buttonDelete";
+            buttonDelete.Size = new Size(90, 35);
+            buttonDelete.TabIndex = 11;
+            buttonDelete.Text = "Видалити";
+            buttonDelete.Click += buttonDelete_Click;
             // 
             // buttonRefresh
             // 
-            this.buttonRefresh.Text = "Оновити";
-            this.buttonRefresh.Location = new System.Drawing.Point(700, 315);
-            this.buttonRefresh.Size = new System.Drawing.Size(110, 35);
-            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
-
+            buttonRefresh.Location = new Point(700, 315);
+            buttonRefresh.Name = "buttonRefresh";
+            buttonRefresh.Size = new Size(110, 35);
+            buttonRefresh.TabIndex = 12;
+            buttonRefresh.Text = "Оновити";
+            buttonRefresh.Click += buttonRefresh_Click;
             // 
             // AdminUsersForm
             // 
-            this.ClientSize = new System.Drawing.Size(820, 360);
-            this.Controls.Add(this.dataGridViewUsers);
-            this.Controls.Add(this.labelUsername);
-            this.Controls.Add(this.textBoxUsername);
-            this.Controls.Add(this.labelEmail);
-            this.Controls.Add(this.textBoxEmail);
-            this.Controls.Add(this.labelPassword);
-            this.Controls.Add(this.textBoxPassword);
-            this.Controls.Add(this.labelRole);
-            this.Controls.Add(this.comboRole);
-            this.Controls.Add(this.buttonAdd);
-            this.Controls.Add(this.buttonEdit);
-            this.Controls.Add(this.buttonDelete);
-            this.Controls.Add(this.buttonRefresh);
-            this.Name = "AdminUsersForm";
-            this.Text = "Управління користувачами";
-
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUsers)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ClientSize = new Size(840, 540);
+            Controls.Add(dataGridViewUsers);
+            Controls.Add(labelUsername);
+            Controls.Add(textBoxUsername);
+            Controls.Add(labelEmail);
+            Controls.Add(textBoxEmail);
+            Controls.Add(labelPassword);
+            Controls.Add(textBoxPassword);
+            Controls.Add(labelRole);
+            Controls.Add(comboRole);
+            Controls.Add(buttonAdd);
+            Controls.Add(buttonEdit);
+            Controls.Add(buttonDelete);
+            Controls.Add(buttonRefresh);
+            Name = "AdminUsersForm";
+            Text = "Управління користувачами";
+            ((System.ComponentModel.ISupportInitialize)dataGridViewUsers).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
     }
 }

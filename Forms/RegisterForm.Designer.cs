@@ -1,162 +1,135 @@
-﻿using Guna.UI2.WinForms;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace Forms
+﻿namespace Forms
 {
     partial class RegisterForm
     {
         private System.ComponentModel.IContainer components = null;
-        private Label labelTitle;
-        private Guna2TextBox textBoxUsername;
-        private Guna2TextBox textBoxEmail;
-        private Guna2TextBox textBoxPassword;
-        private Guna2Button buttonRegister;
-        private Guna2CircleButton buttonBack;
-        private Guna2Elipse elipse;
-        private Guna2ShadowForm shadowForm;
+
+        private TextBox textBoxUsername;
+        private TextBox textBoxEmail;
+        private TextBox textBoxPassword;
+
+        private Button buttonRegister;
+        private Button buttonBack;
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null)) components.Dispose();
+            if (disposing && (components != null))
+                components.Dispose();
             base.Dispose(disposing);
         }
 
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            labelTitle = new Label();
-            textBoxUsername = new Guna2TextBox();
-            textBoxEmail = new Guna2TextBox();
-            textBoxPassword = new Guna2TextBox();
-            buttonRegister = new Guna2Button();
-            buttonBack = new Guna2CircleButton();
-            elipse = new Guna2Elipse(components);
-            shadowForm = new Guna2ShadowForm(components);
-            SuspendLayout();
-            // 
-            // labelTitle
-            // 
-            labelTitle.AutoSize = true;
-            labelTitle.Font = new Font("Segoe UI Semibold", 24F, FontStyle.Bold);
-            labelTitle.ForeColor = Color.FromArgb(45, 45, 48);
-            labelTitle.Location = new Point(282, 50);
-            labelTitle.Name = "labelTitle";
-            labelTitle.Size = new Size(222, 54);
-            labelTitle.TabIndex = 1;
+
+            this.BackColor = Color.White;
+            this.ClientSize = new Size(450, 540);
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Text = "Реєстрація";
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+
+            // ---- Title ----
+            Label labelTitle = new Label();
             labelTitle.Text = "Реєстрація";
-            // 
-            // textBoxUsername
-            // 
-            textBoxUsername.BorderRadius = 12;
-            textBoxUsername.CustomizableEdges = customizableEdges1;
-            textBoxUsername.DefaultText = "";
-            textBoxUsername.Font = new Font("Segoe UI", 10F);
-            textBoxUsername.Location = new Point(282, 140);
-            textBoxUsername.Margin = new Padding(3, 4, 3, 4);
-            textBoxUsername.Name = "textBoxUsername";
-            textBoxUsername.PlaceholderText = "Ім'я користувача";
-            textBoxUsername.SelectedText = "";
-            textBoxUsername.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            textBoxUsername.Size = new Size(340, 50);
-            textBoxUsername.TabIndex = 2;
-            // 
-            // textBoxEmail
-            // 
-            textBoxEmail.BorderRadius = 12;
-            textBoxEmail.CustomizableEdges = customizableEdges3;
-            textBoxEmail.DefaultText = "";
-            textBoxEmail.Font = new Font("Segoe UI", 10F);
-            textBoxEmail.Location = new Point(282, 210);
-            textBoxEmail.Margin = new Padding(3, 4, 3, 4);
-            textBoxEmail.Name = "textBoxEmail";
-            textBoxEmail.PlaceholderText = "Email";
-            textBoxEmail.SelectedText = "";
-            textBoxEmail.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            textBoxEmail.Size = new Size(340, 50);
-            textBoxEmail.TabIndex = 3;
-            // 
-            // textBoxPassword
-            // 
-            textBoxPassword.BorderRadius = 12;
-            textBoxPassword.CustomizableEdges = customizableEdges5;
-            textBoxPassword.DefaultText = "";
-            textBoxPassword.Font = new Font("Segoe UI", 10F);
-            textBoxPassword.Location = new Point(282, 280);
-            textBoxPassword.Margin = new Padding(3, 4, 3, 4);
-            textBoxPassword.Name = "textBoxPassword";
-            textBoxPassword.PasswordChar = '●';
-            textBoxPassword.PlaceholderText = "Пароль";
-            textBoxPassword.SelectedText = "";
-            textBoxPassword.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            textBoxPassword.Size = new Size(340, 50);
-            textBoxPassword.TabIndex = 4;
-            // 
-            // buttonRegister
-            // 
-            buttonRegister.BorderRadius = 12;
-            buttonRegister.Cursor = Cursors.Hand;
-            buttonRegister.CustomizableEdges = customizableEdges7;
-            buttonRegister.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
-            buttonRegister.ForeColor = Color.White;
-            buttonRegister.HoverState.FillColor = Color.FromArgb(74, 128, 235);
-            buttonRegister.Location = new Point(282, 360);
-            buttonRegister.Name = "buttonRegister";
-            buttonRegister.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            buttonRegister.Size = new Size(340, 55);
-            buttonRegister.TabIndex = 5;
+            labelTitle.Font = new Font("Segoe UI", 26F, FontStyle.Bold);
+            labelTitle.ForeColor = Color.FromArgb(0, 51, 102);
+            labelTitle.AutoSize = false;
+            labelTitle.Size = new Size(430, 60);
+            labelTitle.Location = new Point(10, 25);
+            labelTitle.TextAlign = ContentAlignment.MiddleCenter;
+            this.Controls.Add(labelTitle);
+
+            // ---- Subtitle ----
+            Label labelSubtitle = new Label();
+            labelSubtitle.Text = "Створіть новий обліковий запис";
+            labelSubtitle.Font = new Font("Segoe UI", 11F);
+            labelSubtitle.ForeColor = Color.Gray;
+            labelSubtitle.AutoSize = false;
+            labelSubtitle.Size = new Size(430, 30);
+            labelSubtitle.Location = new Point(10, 80);
+            labelSubtitle.TextAlign = ContentAlignment.MiddleCenter;
+            this.Controls.Add(labelSubtitle);
+
+            // -----------------------
+            // PANELS with TEXTBOXES
+            // -----------------------
+            Panel panelUsername = CreateInputPanel("Ім'я користувача", out textBoxUsername);
+            panelUsername.Location = new Point(45, 140);
+            this.Controls.Add(panelUsername);
+
+            Panel panelEmail = CreateInputPanel("Email", out textBoxEmail);
+            panelEmail.Location = new Point(45, 215);
+            this.Controls.Add(panelEmail);
+
+            Panel panelPassword = CreateInputPanel("Пароль", out textBoxPassword, password: true);
+            panelPassword.Location = new Point(45, 290);
+            this.Controls.Add(panelPassword);
+
+            // ---- Register button ----
+            buttonRegister = new Button();
             buttonRegister.Text = "Зареєструватися";
+            buttonRegister.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            buttonRegister.ForeColor = Color.White;
+            buttonRegister.BackColor = Color.FromArgb(0, 120, 215);
+            buttonRegister.FlatStyle = FlatStyle.Flat;
+            buttonRegister.FlatAppearance.BorderSize = 0;
+            buttonRegister.Size = new Size(360, 50);
+            buttonRegister.Location = new Point(45, 370);
             buttonRegister.Click += buttonRegister_Click;
-            // 
-            // buttonBack
-            // 
-            buttonBack.Cursor = Cursors.Hand;
-            buttonBack.FillColor = Color.White;
-            buttonBack.Font = new Font("Segoe UI", 9F);
-            buttonBack.ForeColor = Color.White;
-            buttonBack.HoverState.FillColor = Color.FromArgb(240, 240, 240);
-            buttonBack.Location = new Point(15, 15);
-            buttonBack.Name = "buttonBack";
-            buttonBack.ShadowDecoration.CustomizableEdges = customizableEdges9;
-            buttonBack.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            buttonBack.Size = new Size(40, 40);
-            buttonBack.TabIndex = 0;
+            this.Controls.Add(buttonRegister);
+
+            // ---- Back button ----
+            buttonBack = new Button();
+            buttonBack.Text = "← Назад";
+            buttonBack.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            buttonBack.ForeColor = Color.FromArgb(0, 120, 215);
+            buttonBack.BackColor = Color.White;
+            buttonBack.FlatAppearance.BorderSize = 2;
+            buttonBack.FlatStyle = FlatStyle.Flat;
+            buttonBack.Size = new Size(360, 45);
+            buttonBack.Location = new Point(45, 430);
             buttonBack.Click += buttonBack_Click;
-            // 
-            // elipse
-            // 
-            elipse.BorderRadius = 20;
-            elipse.TargetControl = this;
-            // 
-            // shadowForm
-            // 
-            shadowForm.TargetForm = this;
-            // 
-            // RegisterForm
-            // 
-            BackColor = Color.FromArgb(250, 251, 253);
-            ClientSize = new Size(859, 550);
-            Controls.Add(buttonBack);
-            Controls.Add(labelTitle);
-            Controls.Add(textBoxUsername);
-            Controls.Add(textBoxEmail);
-            Controls.Add(textBoxPassword);
-            Controls.Add(buttonRegister);
-            FormBorderStyle = FormBorderStyle.None;
-            Name = "RegisterForm";
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Реєстрація";
-            ResumeLayout(false);
-            PerformLayout();
+            this.Controls.Add(buttonBack);
+        }
+
+
+        // ============================================
+        // Helper: Create nice input panels
+        // ============================================
+        private Panel CreateInputPanel(string title, out TextBox tb, bool password = false)
+        {
+            Panel panel = new Panel();
+            panel.Size = new Size(360, 55);
+            panel.BackColor = Color.White;
+            panel.BorderStyle = BorderStyle.FixedSingle;
+
+            panel.Paint += (s, e) =>
+            {
+                e.Graphics.DrawRectangle(
+                    new Pen(Color.FromArgb(220, 220, 220)),
+                    0, 0, panel.Width - 1, panel.Height - 1
+                );
+            };
+
+            Label lbl = new Label();
+            lbl.Text = title;
+            lbl.Font = new Font("Segoe UI", 8F);
+            lbl.ForeColor = Color.FromArgb(80, 80, 80);
+            lbl.Location = new Point(12, 5);
+            lbl.AutoSize = true;
+            panel.Controls.Add(lbl);
+
+            tb = new TextBox();
+            tb.Font = new Font("Segoe UI", 10F);
+            tb.BorderStyle = BorderStyle.None;
+            tb.Location = new Point(12, 25);
+            tb.Width = 330;
+            if (password) tb.PasswordChar = '●';
+            panel.Controls.Add(tb);
+
+            return panel;
         }
     }
 }

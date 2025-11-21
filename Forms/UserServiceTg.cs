@@ -212,9 +212,6 @@ namespace Forms
                 if (existing != null)
                     selectedServices.Remove(existing);
             }
-
-            // Оновлюємо текстовий опис у txtUserName
-            txtUserName.Text = string.Join(", ", selectedServices.Select(x => x.ToString()));
         }
 
 

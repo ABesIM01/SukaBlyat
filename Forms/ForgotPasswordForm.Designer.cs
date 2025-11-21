@@ -1,136 +1,191 @@
-﻿namespace Forms
+﻿using System.Drawing.Drawing2D;
+
+namespace Forms
 {
     partial class ForgotPasswordForm
     {
-        private System.ComponentModel.IContainer components = null;
+        private Panel panelContainer;
+        private Label labelTitle;
+        private Label labelSubtitle;
+        private Panel panelUsername;
+        private Label labelUsername;
+        private TextBox textBoxUsername;
+        private Panel panelEmail;
+        private Label labelEmail;
+        private TextBox textBoxEmail;
+        private Button buttonSearch;
+        private Label labelQuestion;
+        private Panel panelAnswer;
+        private TextBox textBoxAnswer;
+        private Button buttonRecover;
+        private Button buttonCancel;
 
-        private System.Windows.Forms.Label labelUsername;
-        private System.Windows.Forms.TextBox textBoxUsername;
-        private System.Windows.Forms.Label labelEmail;
-        private System.Windows.Forms.TextBox textBoxEmail;
-        private System.Windows.Forms.Button buttonSearch;
-        private System.Windows.Forms.Label labelQuestion;
-        private System.Windows.Forms.TextBox textBoxAnswer;
-        private System.Windows.Forms.Button buttonRecover;
-        private System.Windows.Forms.Button buttonCancel;
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-                components.Dispose();
-            base.Dispose(disposing);
-        }
-
-        #region Windows Form Designer generated code
+        private const int FORM_WIDTH = 420;
+        private const int FORM_HEIGHT = 480;
+        private const int CONTENT_WIDTH = 320;
+        private const int CONTENT_MARGIN = 50;
+        private const int ELEMENT_HEIGHT = 50;
+        private const int SPACING = 15;
 
         private void InitializeComponent()
         {
-            this.labelUsername = new System.Windows.Forms.Label();
-            this.textBoxUsername = new System.Windows.Forms.TextBox();
-            this.labelEmail = new System.Windows.Forms.Label();
-            this.textBoxEmail = new System.Windows.Forms.TextBox();
-            this.buttonSearch = new System.Windows.Forms.Button();
-            this.labelQuestion = new System.Windows.Forms.Label();
-            this.textBoxAnswer = new System.Windows.Forms.TextBox();
-            this.buttonRecover = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
 
-            // labelUsername
-            this.labelUsername.AutoSize = true;
-            this.labelUsername.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelUsername.Location = new System.Drawing.Point(30, 25);
-            this.labelUsername.Name = "labelUsername";
-            this.labelUsername.Size = new System.Drawing.Size(43, 15);
-            this.labelUsername.TabIndex = 0;
-            this.labelUsername.Text = "Логін:";
+            // === FORM ===
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.BackColor = Color.White;
+            this.ClientSize = new Size(FORM_WIDTH, FORM_HEIGHT);
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.DoubleBuffered = true;
+            this.Padding = new Padding(1);
 
-            // textBoxUsername
-            this.textBoxUsername.Location = new System.Drawing.Point(120, 22);
-            this.textBoxUsername.Name = "textBoxUsername";
-            this.textBoxUsername.Size = new System.Drawing.Size(180, 23);
-            this.textBoxUsername.TabIndex = 1;
+            // === PANEL CONTAINER ===
+            panelContainer = new Panel();
+            panelContainer.Dock = DockStyle.Fill;
+            panelContainer.BackColor = Color.FromArgb(250, 250, 252);
+            panelContainer.Paint += PanelContainer_Paint;
+            this.Controls.Add(panelContainer);
 
-            // labelEmail
-            this.labelEmail.AutoSize = true;
-            this.labelEmail.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelEmail.Location = new System.Drawing.Point(30, 60);
-            this.labelEmail.Name = "labelEmail";
-            this.labelEmail.Size = new System.Drawing.Size(52, 15);
-            this.labelEmail.TabIndex = 2;
-            this.labelEmail.Text = "Пошта:";
+            // === HEADER ===
+            labelTitle = new Label();
+            labelTitle.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            labelTitle.ForeColor = Color.FromArgb(0, 51, 102);
+            labelTitle.Text = "Відновлення пароля";
+            labelTitle.Size = new Size(CONTENT_WIDTH, 40);
+            labelTitle.Location = new Point(CONTENT_MARGIN, 30);
+            panelContainer.Controls.Add(labelTitle);
 
-            // textBoxEmail
-            this.textBoxEmail.Location = new System.Drawing.Point(120, 57);
-            this.textBoxEmail.Name = "textBoxEmail";
-            this.textBoxEmail.Size = new System.Drawing.Size(180, 23);
-            this.textBoxEmail.TabIndex = 3;
+            labelSubtitle = new Label();
+            labelSubtitle.Font = new Font("Segoe UI", 10F);
+            labelSubtitle.ForeColor = Color.FromArgb(100, 100, 100);
+            labelSubtitle.Text = "Знайдемо ваш акаунт";
+            labelSubtitle.Size = new Size(CONTENT_WIDTH, 30);
+            labelSubtitle.Location = new Point(CONTENT_MARGIN, 70);
+            panelContainer.Controls.Add(labelSubtitle);
 
-            // buttonSearch
-            this.buttonSearch.Location = new System.Drawing.Point(120, 90);
-            this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(180, 27);
-            this.buttonSearch.TabIndex = 4;
-            this.buttonSearch.Text = "Знайти користувача";
-            this.buttonSearch.UseVisualStyleBackColor = true;
-            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
+            // === USERNAME ===
+            panelUsername = new Panel();
+            panelUsername.BackColor = Color.White;
+            panelUsername.BorderStyle = BorderStyle.FixedSingle;
+            panelUsername.Size = new Size(CONTENT_WIDTH, ELEMENT_HEIGHT);
+            panelUsername.Location = new Point(CONTENT_MARGIN, 120);
+            panelContainer.Controls.Add(panelUsername);
 
-            // labelQuestion
-            this.labelQuestion.AutoSize = true;
-            this.labelQuestion.Location = new System.Drawing.Point(30, 130);
-            this.labelQuestion.Name = "labelQuestion";
-            this.labelQuestion.Size = new System.Drawing.Size(0, 15);
-            this.labelQuestion.TabIndex = 5;
+            labelUsername = new Label();
+            labelUsername.Text = "Логін";
+            labelUsername.Font = new Font("Segoe UI", 8F);
+            labelUsername.ForeColor = Color.FromArgb(80, 80, 80);
+            labelUsername.Location = new Point(10, 5);
+            panelUsername.Controls.Add(labelUsername);
 
-            // textBoxAnswer
-            this.textBoxAnswer.Location = new System.Drawing.Point(30, 160);
-            this.textBoxAnswer.Name = "textBoxAnswer";
-            this.textBoxAnswer.Size = new System.Drawing.Size(270, 23);
-            this.textBoxAnswer.TabIndex = 6;
-            this.textBoxAnswer.Enabled = false;
+            textBoxUsername = new TextBox();
+            textBoxUsername.BorderStyle = BorderStyle.None;
+            textBoxUsername.Font = new Font("Segoe UI", 10F);
+            textBoxUsername.ForeColor = Color.Black;
+            textBoxUsername.Location = new Point(10, 25);
+            textBoxUsername.Width = 290;
+            panelUsername.Controls.Add(textBoxUsername);
 
-            // buttonRecover
-            this.buttonRecover.Location = new System.Drawing.Point(30, 200);
-            this.buttonRecover.Name = "buttonRecover";
-            this.buttonRecover.Size = new System.Drawing.Size(130, 27);
-            this.buttonRecover.TabIndex = 7;
-            this.buttonRecover.Text = "Відновити пароль";
-            this.buttonRecover.UseVisualStyleBackColor = true;
-            this.buttonRecover.Enabled = false;
-            this.buttonRecover.Click += new System.EventHandler(this.buttonRecover_Click);
+            // === EMAIL ===
+            panelEmail = new Panel();
+            panelEmail.BackColor = Color.White;
+            panelEmail.BorderStyle = BorderStyle.FixedSingle;
+            panelEmail.Size = new Size(CONTENT_WIDTH, ELEMENT_HEIGHT);
+            panelEmail.Location = new Point(CONTENT_MARGIN, 120 + ELEMENT_HEIGHT + SPACING);
+            panelContainer.Controls.Add(panelEmail);
 
-            // buttonCancel
-            this.buttonCancel.Location = new System.Drawing.Point(170, 200);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(130, 27);
-            this.buttonCancel.TabIndex = 8;
-            this.buttonCancel.Text = "Скасувати";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            labelEmail = new Label();
+            labelEmail.Text = "Пошта";
+            labelEmail.Font = new Font("Segoe UI", 8F);
+            labelEmail.ForeColor = Color.FromArgb(80, 80, 80);
+            labelEmail.Location = new Point(10, 5);
+            panelEmail.Controls.Add(labelEmail);
 
-            // ForgotPasswordForm
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(340, 260);
-            this.Controls.Add(this.labelUsername);
-            this.Controls.Add(this.textBoxUsername);
-            this.Controls.Add(this.labelEmail);
-            this.Controls.Add(this.textBoxEmail);
-            this.Controls.Add(this.buttonSearch);
-            this.Controls.Add(this.labelQuestion);
-            this.Controls.Add(this.textBoxAnswer);
-            this.Controls.Add(this.buttonRecover);
-            this.Controls.Add(this.buttonCancel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "ForgotPasswordForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Відновлення пароля";
+            textBoxEmail = new TextBox();
+            textBoxEmail.BorderStyle = BorderStyle.None;
+            textBoxEmail.Font = new Font("Segoe UI", 10F);
+            textBoxEmail.ForeColor = Color.Black;
+            textBoxEmail.Location = new Point(10, 25);
+            textBoxEmail.Width = 290;
+            panelEmail.Controls.Add(textBoxEmail);
+
+            // === Search button ===
+            buttonSearch = new Button();
+            buttonSearch.Text = "🔍 Знайти користувача";
+            buttonSearch.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            buttonSearch.BackColor = Color.FromArgb(0, 120, 215);
+            buttonSearch.ForeColor = Color.White;
+            buttonSearch.FlatStyle = FlatStyle.Flat;
+            buttonSearch.FlatAppearance.BorderSize = 0;
+            buttonSearch.Size = new Size(CONTENT_WIDTH, 45);
+            buttonSearch.Location = new Point(CONTENT_MARGIN, 230);
+            buttonSearch.Click += buttonSearch_Click;
+            panelContainer.Controls.Add(buttonSearch);
+
+            // === SECURITY QUESTION ===
+            labelQuestion = new Label();
+            labelQuestion.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            labelQuestion.ForeColor = Color.FromArgb(0, 51, 102);
+            labelQuestion.Location = new Point(CONTENT_MARGIN, 285);
+            labelQuestion.Size = new Size(CONTENT_WIDTH, 20);
+            panelContainer.Controls.Add(labelQuestion);
+
+            panelAnswer = new Panel();
+            panelAnswer.BackColor = Color.White;
+            panelAnswer.BorderStyle = BorderStyle.FixedSingle;
+            panelAnswer.Size = new Size(CONTENT_WIDTH, ELEMENT_HEIGHT);
+            panelAnswer.Location = new Point(CONTENT_MARGIN, 310);
+            panelAnswer.Enabled = false;
+            panelContainer.Controls.Add(panelAnswer);
+
+            textBoxAnswer = new TextBox();
+            textBoxAnswer.BorderStyle = BorderStyle.None;
+            textBoxAnswer.Font = new Font("Segoe UI", 10F);
+            textBoxAnswer.Location = new Point(10, 15);
+            textBoxAnswer.Width = 290;
+            panelAnswer.Controls.Add(textBoxAnswer);
+
+            // === Recover button ===
+            buttonRecover = new Button();
+            buttonRecover.Text = "✔ Відновити";
+            buttonRecover.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            buttonRecover.BackColor = Color.FromArgb(0, 150, 90);
+            buttonRecover.ForeColor = Color.White;
+            buttonRecover.FlatStyle = FlatStyle.Flat;
+            buttonRecover.FlatAppearance.BorderSize = 0;
+            buttonRecover.Size = new Size(150, 45);
+            buttonRecover.Location = new Point(CONTENT_MARGIN, 370);
+            buttonRecover.Enabled = false;
+            buttonRecover.Click += buttonRecover_Click;
+            panelContainer.Controls.Add(buttonRecover);
+
+            // === Cancel button ===
+            buttonCancel = new Button();
+            buttonCancel.Text = "Скасувати";
+            buttonCancel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            buttonCancel.BackColor = Color.FromArgb(200, 60, 60);
+            buttonCancel.ForeColor = Color.White;
+            buttonCancel.FlatStyle = FlatStyle.Flat;
+            buttonCancel.FlatAppearance.BorderSize = 0;
+            buttonCancel.Size = new Size(150, 45);
+            buttonCancel.Location = new Point(CONTENT_MARGIN + 170, 370);
+            buttonCancel.Click += buttonCancel_Click;
+            panelContainer.Controls.Add(buttonCancel);
+
             this.ResumeLayout(false);
-            this.PerformLayout();
         }
 
-        #endregion
+        // === Gradient background like LoginForm ===
+        private void PanelContainer_Paint(object sender, PaintEventArgs e)
+        {
+            var gradient = new LinearGradientBrush(
+                panelContainer.ClientRectangle,
+                Color.FromArgb(255, 255, 255),
+                Color.FromArgb(240, 245, 255),
+                LinearGradientMode.Vertical);
+
+            e.Graphics.FillRectangle(gradient, panelContainer.ClientRectangle);
+        }
     }
 }

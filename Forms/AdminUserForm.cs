@@ -11,6 +11,63 @@ namespace Forms
         {
             InitializeComponent();
             LoadUsers();
+            ApplyDarkTheme();
+        }
+
+        private void ApplyDarkTheme()
+        {
+            this.BackColor = Color.FromArgb(22, 22, 22);
+
+            // === GRID ===
+            dataGridViewUsers.BackgroundColor = Color.FromArgb(28, 28, 28);
+            dataGridViewUsers.DefaultCellStyle.BackColor = Color.FromArgb(28, 28, 28);
+            dataGridViewUsers.DefaultCellStyle.ForeColor = Color.White;
+            dataGridViewUsers.DefaultCellStyle.SelectionBackColor = Color.FromArgb(52, 52, 52);
+            dataGridViewUsers.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(36, 36, 36);
+            dataGridViewUsers.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+
+            // === LABELS ===
+            StyleLabel(labelUsername);
+            StyleLabel(labelEmail);
+            StyleLabel(labelPassword);
+            StyleLabel(labelRole);
+
+            // === TEXTBOXES ===
+            StyleTextBox(textBoxUsername);
+            StyleTextBox(textBoxEmail);
+            StyleTextBox(textBoxPassword);
+
+            // === COMBOBOX ===
+            comboRole.BackColor = Color.FromArgb(36, 36, 36);
+            comboRole.ForeColor = Color.White;
+
+            // === BUTTONS ===
+            StyleButton(buttonAdd);
+            StyleButton(buttonEdit);
+            StyleButton(buttonDelete);
+            StyleButton(buttonRefresh);
+        }
+
+        private void StyleLabel(Label lbl)
+        {
+            lbl.ForeColor = Color.White;
+            lbl.Font = new Font("Segoe UI", 10F);
+        }
+
+        private void StyleTextBox(TextBox tb)
+        {
+            tb.BackColor = Color.FromArgb(36, 36, 36);
+            tb.ForeColor = Color.White;
+            tb.BorderStyle = BorderStyle.FixedSingle;
+        }
+
+        private void StyleButton(Button btn)
+        {
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.BackColor = Color.FromArgb(36, 36, 36);
+            btn.ForeColor = Color.White;
+            btn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         }
 
         // Завантажити користувачів

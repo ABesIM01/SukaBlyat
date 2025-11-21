@@ -36,12 +36,28 @@ namespace DatabaseLibrary
                     new SQLiteCommand(createUsers, conn).ExecuteNonQuery();
 
                     // === Таблиця послуг ===
-                    string createServices = @"CREATE TABLE IF NOT EXISTS Services (
-                                                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                                                name TEXT NOT NULL,
-                                                description TEXT,
-                                                price TEXT
-                                            );";
+                    string createServices = @"
+    PRAGMA foreign_keys=off;
+
+    BEGIN TRANSACTION;
+
+    CREATE TABLE IF NOT EXISTS Services_new (
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        price TEXT
+    );
+
+    INSERT INTO Services_new (ID, name, price)
+        SELECT ID, name, price FROM Services;
+
+    DROP TABLE Services;
+
+    ALTER TABLE Services_new RENAME TO Services;
+
+    COMMIT;
+
+    PRAGMA foreign_keys=on;
+";
                     new SQLiteCommand(createServices, conn).ExecuteNonQuery();
 
                     // === Якщо адмін ще не створений — створюємо ===
@@ -211,18 +227,17 @@ namespace DatabaseLibrary
         }
 
         // === Додавання послуги ===
-        public static void AddService(string name, string description, string price)
+        public static void AddService(string name, string price)
         {
             try
             {
                 using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
-                    string sql = "INSERT INTO Services (name, description, price) VALUES (@n, @d, @p)";
+                    string sql = "INSERT INTO Services (name, price) VALUES (@n, @p)";
                     using (var cmd = new SQLiteCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@n", name);
-                        cmd.Parameters.AddWithValue("@d", description);
                         cmd.Parameters.AddWithValue("@p", price);
                         cmd.ExecuteNonQuery();
                     }
@@ -235,18 +250,17 @@ namespace DatabaseLibrary
         }
 
         // === Оновлення послуги ===
-        public static void UpdateService(int id, string name, string description, string price)
+        public static void UpdateService(int id, string name, string price)
         {
             try
             {
                 using (var conn = new SQLiteConnection(connectionString))
                 {
                     conn.Open();
-                    string sql = "UPDATE Services SET name=@n, description=@d, price=@p WHERE ID=@id";
+                    string sql = "UPDATE Services SET name=@n, price=@p WHERE ID=@id";
                     using (var cmd = new SQLiteCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@n", name);
-                        cmd.Parameters.AddWithValue("@d", description);
                         cmd.Parameters.AddWithValue("@p", price);
                         cmd.Parameters.AddWithValue("@id", id);
                         cmd.ExecuteNonQuery();

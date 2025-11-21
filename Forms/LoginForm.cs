@@ -19,6 +19,7 @@ namespace Forms
         public LoginForm()
         {
             InitializeComponent();
+            InitializeComponents();
             Database.Init();
         }
 
@@ -76,7 +77,7 @@ namespace Forms
                 if (role == "admin")
                 {
                     MessageBox.Show("👨‍💼 Вхід адміністратора успішний!", "Успіх", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    var adminForm = new AdminServiceForm();
+                    var adminForm = new StartAdminPanelForm();
                     adminForm.FormClosed += (s, args) => this.Close();
                     adminForm.Show();
                     this.Hide();
