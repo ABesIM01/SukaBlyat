@@ -31,7 +31,7 @@ namespace WinFormsApp2
                 // ✅ додаємо всі назви послуг у ComboBox
                 foreach (DataRow row in dt.Rows)
                 {
-                    comboBoxServices.Items.Add(new Service(
+                    comboBoxServices.Items.Add(new ServiceModel(
                         row["name"].ToString(),
                         row["description"].ToString(),
                         row["price"].ToString()
@@ -55,7 +55,7 @@ namespace WinFormsApp2
         // === Обробник вибору послуги ===
         private void comboBoxServices_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxServices.SelectedItem is Service selectedService)
+            if (comboBoxServices.SelectedItem is ServiceModel selectedService)
             {
                 textBoxName.Text = selectedService.Name;
                 textBoxDescription.Text = selectedService.Description;
@@ -66,7 +66,7 @@ namespace WinFormsApp2
         // === Додати у кошик ===
         private void buttonAddToCart_Click(object sender, EventArgs e)
         {
-            if (comboBoxServices.SelectedItem is Service service)
+            if (comboBoxServices.SelectedItem is ServiceModel service)
             {
                 MessageBox.Show($"Послугу '{service.Name}' додано до кошика!",
                     "Додано", MessageBoxButtons.OK, MessageBoxIcon.Information);

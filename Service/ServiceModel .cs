@@ -1,12 +1,14 @@
-﻿namespace WinFormsApp2
+﻿
+namespace WinFormsApp2
 {
-    public class Service
+    
+    public class ServiceModel
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public string Price { get; set; }
 
-        public Service(string name, string description, string price)
+        public ServiceModel(string name, string description, string price)
         {
             Name = name;
             Description = description;
@@ -19,3 +21,4 @@
         }
     }
 }
+    

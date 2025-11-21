@@ -52,12 +52,18 @@ namespace Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-
+ 
             // ==== FORM ====
             this.Text = "CRM — Telegram Services";
             this.ClientSize = new System.Drawing.Size(900, 620);
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
+
+            // Дозволяємо розширювати
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
+
+            // Мінімальний розмір (опціонально)
+            this.MinimumSize = new System.Drawing.Size(900, 620);
+
 
             // ===============================
             // TOP PANEL

@@ -2,8 +2,9 @@ using System;
 using System.Windows.Forms;
 using WinFormsApp2;
 using DatabaseLibrary;
+using Forms;
 
-namespace Forms
+namespace WinFormsApp2.Start
 {
     static class Program
     {

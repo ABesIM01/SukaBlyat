@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Printing;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseClass;      // тут лежить TGdatabase
+using DatabaseClass;
+using WinFormsApp2.PayLogic; // тут лежить TGdatabase
 
 namespace Forms
 {
@@ -23,9 +24,16 @@ namespace Forms
         private readonly Color TextPrimary = Color.FromArgb(235, 235, 235);
         private readonly Color TextSecondary = Color.FromArgb(180, 180, 180);
         private readonly Color TileHover = Color.FromArgb(58, 58, 58);
+        private readonly OrderCalculator orderCalculator = new OrderCalculator();
+        private readonly List<WinFormsApp2.Service.ServiceOrder> selectedServices = new List<WinFormsApp2.Service.ServiceOrder>();
+
+
 
         // Service tiles dictionary
         private readonly Dictionary<Panel, string> serviceTiles = new Dictionary<Panel, string>();
+
+        // LiqPay
+        private PaymentProcessor payment;
 
         public UseServiceTg()
         {
@@ -48,7 +56,6 @@ namespace Forms
                 p.MouseEnter += Tile_MouseEnter;
                 p.MouseLeave += Tile_MouseLeave;
 
-                // клік по тексту всередині плитки теж має працювати
                 foreach (Control c in p.Controls)
                     c.Click += (s, e) => ServiceTile_Click(p, EventArgs.Empty);
             }
@@ -64,36 +71,39 @@ namespace Forms
             dataGridViewOrders.GridColor = Color.FromArgb(45, 45, 45);
             dataGridViewOrders.BackgroundColor = BackDark;
 
+            // Ініціалізація LiqPay
+            payment = new PaymentProcessor(
+                publicKey: "sandbox_i93755190408",
+                privateKey: "sandbox_VWm5JcETlYD4Q8VhWEEIIsk7hqkxptatzapjoUml"
+            );
+            payment.PaymentSuccess += Payment_PaymentSuccess;
+            payment.PaymentFailure += Payment_PaymentFailure;
+
             this.Load += Form1_Load;
             this.Shown += Form1_Shown;
         }
 
         // ----- Form events -----
-
         private void Form1_Shown(object? sender, EventArgs e)
         {
-            // заокруглення кутів плиток
             RoundControl(tileTaxi, 8);
             RoundControl(tileEscort, 8);
             RoundControl(tileSecurity, 8);
             RoundControl(tileDelivery, 8);
 
-            // активна вкладка за замовчуванням
             ActivateTab(btnTabOrder);
         }
 
         private void Form1_Load(object? sender, EventArgs e)
         {
-            ApplyTheme(true);  // темна тема за замовчуванням
+            ApplyTheme(true);
             LoadOrdersIntoGrid();
         }
 
         // ----- Перемикання вкладок -----
-
         private void ActivateTab(Button active)
         {
             var tabs = new[] { btnTabOrder, btnTabView, btnTabSettings };
-
             foreach (var t in tabs)
             {
                 t.BackColor = Color.FromArgb(28, 28, 28);
@@ -116,7 +126,6 @@ namespace Forms
         private void btnTabSettings_Click(object? sender, EventArgs e) => ActivateTab(btnTabSettings);
 
         // ----- Плитки послуг -----
-
         private void Tile_MouseEnter(object? sender, EventArgs e)
         {
             if (sender is Panel p && p.Tag?.ToString() != "selected")
@@ -129,12 +138,12 @@ namespace Forms
                 p.BackColor = PanelDark;
         }
 
-        private void ServiceTile_Click(object? sender, EventArgs e)
+
+
+        // ----- Метод для простої вибірки плитки -----
+        private void ToggleTileSelection(Panel p)
         {
-            if (sender is not Panel p) return;
-
             bool isSelected = p.Tag?.ToString() == "selected";
-
             if (!isSelected)
             {
                 p.Tag = "selected";
@@ -151,42 +160,94 @@ namespace Forms
             }
         }
 
-        // ----- Створення замовлення -----
+        // ----- Метод для відкриття конфігураційної форми послуги -----
+        private void ServiceTile_Click(object? sender, EventArgs e)
+        {
+            if (sender is not Panel p) return;
 
+            string serviceName = serviceTiles[p];
+
+            // Всі послуги тепер відкривають форму конфігурації
+            OpenServiceConfiguration(p, serviceName);
+        }
+
+        private void OpenServiceConfiguration(Panel p, string serviceName)
+        {
+            using var form = new ServiceConfigurationForm(serviceName);
+            var result = form.ShowDialog(this);
+
+            // Якщо користувач підтвердив
+            if (result == DialogResult.OK && form.Confirmed)
+            {
+                var order = new WinFormsApp2.Service.ServiceOrder
+                {
+                    ServiceName = serviceName,
+                    Quantity = form.Quantity,
+                    Option = form.OptionSelected,
+                    Notes = form.Notes
+                };
+
+                // Якщо ця послуга вже є в списку, замінюємо
+                var existing = selectedServices.FirstOrDefault(x => x.ServiceName == serviceName);
+                if (existing != null)
+                    selectedServices.Remove(existing);
+
+                selectedServices.Add(order);
+
+                // Відзначаємо плитку як обрану
+                p.Tag = "selected";
+                p.BackColor = Accent;
+                foreach (Control c in p.Controls)
+                    c.ForeColor = Color.White;
+            }
+            else
+            {
+                // Якщо користувач скасував — знімаємо виділення плитки та видаляємо з списку
+                p.Tag = null;
+                p.BackColor = PanelDark;
+                foreach (Control c in p.Controls)
+                    c.ForeColor = TextPrimary;
+
+                var existing = selectedServices.FirstOrDefault(x => x.ServiceName == serviceName);
+                if (existing != null)
+                    selectedServices.Remove(existing);
+            }
+
+            // Оновлюємо текстовий опис у txtUserName
+            txtUserName.Text = string.Join(", ", selectedServices.Select(x => x.ToString()));
+        }
+
+
+
+        // ----- Створення замовлення -----
         private async void btnMakeOrder_Click(object? sender, EventArgs e)
         {
-            var selected = serviceTiles
-                .Where(kv => kv.Key.Tag?.ToString() == "selected")
-                .Select(kv => kv.Value)
-                .ToList();
-
-            if (!selected.Any())
+            if (!selectedServices.Any())
             {
                 MessageBox.Show("Оберіть принаймні одну послугу.", "Увага",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            string name = string.IsNullOrWhiteSpace(txtUserName.Text)
-                ? "Клієнт"
-                : txtUserName.Text.Trim();
-
-            string products = string.Join(", ", selected);
+            string name = string.IsNullOrWhiteSpace(txtUserName.Text) ? "Клієнт" : txtUserName.Text.Trim();
+            string products = string.Join(", ", selectedServices.Select(x => x.ToString()));
 
             try
             {
-                // зберігаємо у окрему БД телеграм-замовлень
                 TGdatabase.AddOrder(name, products);
 
-                // відправляємо в телеграм
                 string botToken = "8276145573:AAGk5mlkvd5NChGwRz8s2s6JeiTZRIMRs_g";
                 string chatId = "1822940984";
                 string message = $"{name} замовив: {products}";
                 var sendTask = SendTelegramMessageAsync(botToken, chatId, message);
 
+                decimal totalAmount = orderCalculator.CalculateTotal(selectedServices.Select(x => x.ServiceName).ToList());
+                string payUrl = await payment.CreatePaymentAsync(totalAmount, products);
+                Process.Start(new ProcessStartInfo(payUrl) { UseShellExecute = true });
+
                 ShowConfirmationModal(name, products);
 
-                // скидаємо вибір
+                // Скидання вибору плиток
                 foreach (var kv in serviceTiles)
                 {
                     kv.Key.Tag = null;
@@ -194,12 +255,13 @@ namespace Forms
                     foreach (Control c in kv.Key.Controls)
                         c.ForeColor = TextPrimary;
                 }
+                selectedServices.Clear();
                 txtUserName.Clear();
 
                 if (panelView.Visible)
                     LoadOrdersIntoGrid();
 
-                await sendTask; // помилки телеграма ігноруємо
+                await sendTask;
             }
             catch (Exception ex)
             {
@@ -207,6 +269,29 @@ namespace Forms
                     "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+        private void Payment_PaymentSuccess(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<object, EventArgs>(Payment_PaymentSuccess), sender, e);
+                return;
+            }
+            MessageBox.Show("Оплата успішна!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void Payment_PaymentFailure(object sender, string errorMessage)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<object, string>(Payment_PaymentFailure), sender, errorMessage);
+                return;
+            }
+            MessageBox.Show(errorMessage, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
 
         private static async Task SendTelegramMessageAsync(string botToken, string chatId, string message)
         {
