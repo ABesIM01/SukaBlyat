@@ -1,4 +1,5 @@
-﻿using System.Drawing.Drawing2D;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace Forms
 {
@@ -7,185 +8,173 @@ namespace Forms
         private Panel panelContainer;
         private Label labelTitle;
         private Label labelSubtitle;
-        private Panel panelUsername;
-        private Label labelUsername;
-        private TextBox textBoxUsername;
-        private Panel panelEmail;
+
         private Label labelEmail;
         private TextBox textBoxEmail;
-        private Button buttonSearch;
-        private Label labelQuestion;
-        private Panel panelAnswer;
-        private TextBox textBoxAnswer;
-        private Button buttonRecover;
+
+        private Button buttonSendOTP;
+
+        private Label labelOTP;
+        private TextBox textBoxOTP;
+
+        private Label labelNewPassword;
+        private TextBox textBoxNewPassword;
+
+        private Button buttonChangePassword;
         private Button buttonCancel;
 
-        private const int FORM_WIDTH = 420;
-        private const int FORM_HEIGHT = 480;
-        private const int CONTENT_WIDTH = 320;
-        private const int CONTENT_MARGIN = 50;
-        private const int ELEMENT_HEIGHT = 50;
-        private const int SPACING = 15;
+        private const int FORM_WIDTH = 500;
+        private const int FORM_HEIGHT = 540;
 
         private void InitializeComponent()
         {
             this.SuspendLayout();
 
             // === FORM ===
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.BackColor = Color.White;
+            this.BackColor = Color.FromArgb(20, 20, 20);
             this.ClientSize = new Size(FORM_WIDTH, FORM_HEIGHT);
-            this.FormBorderStyle = FormBorderStyle.None;
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.DoubleBuffered = true;
-            this.Padding = new Padding(1);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.Font = new Font("Segoe UI", 11F);
+            this.ForeColor = Color.White;
+            this.Text = "Відновлення пароля";
 
-            // === PANEL CONTAINER ===
+            // === MAIN PANEL (all elements centered) ===
             panelContainer = new Panel();
             panelContainer.Dock = DockStyle.Fill;
-            panelContainer.BackColor = Color.FromArgb(250, 250, 252);
-            panelContainer.Paint += PanelContainer_Paint;
+            panelContainer.BackColor = Color.FromArgb(20, 20, 20);
+            panelContainer.Padding = new Padding(0, 20, 0, 0);
             this.Controls.Add(panelContainer);
 
-            // === HEADER ===
-            labelTitle = new Label();
-            labelTitle.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-            labelTitle.ForeColor = Color.FromArgb(0, 51, 102);
-            labelTitle.Text = "Відновлення пароля";
-            labelTitle.Size = new Size(CONTENT_WIDTH, 40);
-            labelTitle.Location = new Point(CONTENT_MARGIN, 30);
+            int centerX = (FORM_WIDTH - 300) / 2; // всі елементи шириною 300 px по центру
+
+            // === TITLE ===
+            labelTitle = new Label
+            {
+                Text = "Відновлення пароля",
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI Semibold", 22F),
+                AutoSize = true,
+                Location = new Point((FORM_WIDTH - 340) / 2, 25) // трохи ширше для центра
+            };
             panelContainer.Controls.Add(labelTitle);
 
-            labelSubtitle = new Label();
-            labelSubtitle.Font = new Font("Segoe UI", 10F);
-            labelSubtitle.ForeColor = Color.FromArgb(100, 100, 100);
-            labelSubtitle.Text = "Знайдемо ваш акаунт";
-            labelSubtitle.Size = new Size(CONTENT_WIDTH, 30);
-            labelSubtitle.Location = new Point(CONTENT_MARGIN, 70);
+            // === SUBTITLE ===
+            labelSubtitle = new Label
+            {
+                Text = "Введіть свою пошту — ми надішлемо OTP",
+                ForeColor = Color.Gray,
+                Font = new Font("Segoe UI", 10.5F),
+                AutoSize = true,
+                Location = new Point((FORM_WIDTH - 340) / 2, 70)
+            };
             panelContainer.Controls.Add(labelSubtitle);
 
-            // === USERNAME ===
-            panelUsername = new Panel();
-            panelUsername.BackColor = Color.White;
-            panelUsername.BorderStyle = BorderStyle.FixedSingle;
-            panelUsername.Size = new Size(CONTENT_WIDTH, ELEMENT_HEIGHT);
-            panelUsername.Location = new Point(CONTENT_MARGIN, 120);
-            panelContainer.Controls.Add(panelUsername);
+            int currentY = 120;
 
-            labelUsername = new Label();
-            labelUsername.Text = "Логін";
-            labelUsername.Font = new Font("Segoe UI", 8F);
-            labelUsername.ForeColor = Color.FromArgb(80, 80, 80);
-            labelUsername.Location = new Point(10, 5);
-            panelUsername.Controls.Add(labelUsername);
+            // === EMAIL LABEL ===
+            labelEmail = new Label
+            {
+                Text = "Пошта:",
+                ForeColor = Color.White,
+                AutoSize = true,
+                Location = new Point(centerX, currentY)
+            };
+            panelContainer.Controls.Add(labelEmail);
 
-            textBoxUsername = new TextBox();
-            textBoxUsername.BorderStyle = BorderStyle.None;
-            textBoxUsername.Font = new Font("Segoe UI", 10F);
-            textBoxUsername.ForeColor = Color.Black;
-            textBoxUsername.Location = new Point(10, 25);
-            textBoxUsername.Width = 290;
-            panelUsername.Controls.Add(textBoxUsername);
+            // EMAIL FIELD
+            textBoxEmail = CreateInput(centerX, currentY + 25);
+            panelContainer.Controls.Add(textBoxEmail);
 
-            // === EMAIL ===
-            panelEmail = new Panel();
-            panelEmail.BackColor = Color.White;
-            panelEmail.BorderStyle = BorderStyle.FixedSingle;
-            panelEmail.Size = new Size(CONTENT_WIDTH, ELEMENT_HEIGHT);
-            panelEmail.Location = new Point(CONTENT_MARGIN, 120 + ELEMENT_HEIGHT + SPACING);
-            panelContainer.Controls.Add(panelEmail);
+            // SEND OTP BUTTON
+            buttonSendOTP = CreateButton("🔑 Отримати OTP", centerX, currentY + 75, 300);
+            buttonSendOTP.Click += buttonSendOTP_Click;
+            panelContainer.Controls.Add(buttonSendOTP);
 
-            labelEmail = new Label();
-            labelEmail.Text = "Пошта";
-            labelEmail.Font = new Font("Segoe UI", 8F);
-            labelEmail.ForeColor = Color.FromArgb(80, 80, 80);
-            labelEmail.Location = new Point(10, 5);
-            panelEmail.Controls.Add(labelEmail);
+            // UPDATE POSITION
+            currentY += 140;
 
-            textBoxEmail = new TextBox();
-            textBoxEmail.BorderStyle = BorderStyle.None;
-            textBoxEmail.Font = new Font("Segoe UI", 10F);
-            textBoxEmail.ForeColor = Color.Black;
-            textBoxEmail.Location = new Point(10, 25);
-            textBoxEmail.Width = 290;
-            panelEmail.Controls.Add(textBoxEmail);
+            // === OTP LABEL ===
+            labelOTP = new Label
+            {
+                Text = "Введіть OTP:",
+                ForeColor = Color.White,
+                AutoSize = true,
+                Location = new Point(centerX, currentY)
+            };
+            panelContainer.Controls.Add(labelOTP);
 
-            // === Search button ===
-            buttonSearch = new Button();
-            buttonSearch.Text = "🔍 Знайти користувача";
-            buttonSearch.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            buttonSearch.BackColor = Color.FromArgb(0, 120, 215);
-            buttonSearch.ForeColor = Color.White;
-            buttonSearch.FlatStyle = FlatStyle.Flat;
-            buttonSearch.FlatAppearance.BorderSize = 0;
-            buttonSearch.Size = new Size(CONTENT_WIDTH, 45);
-            buttonSearch.Location = new Point(CONTENT_MARGIN, 230);
-            buttonSearch.Click += buttonSearch_Click;
-            panelContainer.Controls.Add(buttonSearch);
+            // OTP FIELD
+            textBoxOTP = CreateInput(centerX, currentY + 25);
+            textBoxOTP.Enabled = false;
+            panelContainer.Controls.Add(textBoxOTP);
 
-            // === SECURITY QUESTION ===
-            labelQuestion = new Label();
-            labelQuestion.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            labelQuestion.ForeColor = Color.FromArgb(0, 51, 102);
-            labelQuestion.Location = new Point(CONTENT_MARGIN, 285);
-            labelQuestion.Size = new Size(CONTENT_WIDTH, 20);
-            panelContainer.Controls.Add(labelQuestion);
+            currentY += 80;
 
-            panelAnswer = new Panel();
-            panelAnswer.BackColor = Color.White;
-            panelAnswer.BorderStyle = BorderStyle.FixedSingle;
-            panelAnswer.Size = new Size(CONTENT_WIDTH, ELEMENT_HEIGHT);
-            panelAnswer.Location = new Point(CONTENT_MARGIN, 310);
-            panelAnswer.Enabled = false;
-            panelContainer.Controls.Add(panelAnswer);
+            // === NEW PASSWORD LABEL ===
+            labelNewPassword = new Label
+            {
+                Text = "Новий пароль:",
+                ForeColor = Color.White,
+                AutoSize = true,
+                Location = new Point(centerX, currentY)
+            };
+            panelContainer.Controls.Add(labelNewPassword);
 
-            textBoxAnswer = new TextBox();
-            textBoxAnswer.BorderStyle = BorderStyle.None;
-            textBoxAnswer.Font = new Font("Segoe UI", 10F);
-            textBoxAnswer.Location = new Point(10, 15);
-            textBoxAnswer.Width = 290;
-            panelAnswer.Controls.Add(textBoxAnswer);
+            // PASSWORD INPUT
+            textBoxNewPassword = CreateInput(centerX, currentY + 25);
+            textBoxNewPassword.PasswordChar = '*';
+            textBoxNewPassword.Enabled = false;
+            panelContainer.Controls.Add(textBoxNewPassword);
 
-            // === Recover button ===
-            buttonRecover = new Button();
-            buttonRecover.Text = "✔ Відновити";
-            buttonRecover.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            buttonRecover.BackColor = Color.FromArgb(0, 150, 90);
-            buttonRecover.ForeColor = Color.White;
-            buttonRecover.FlatStyle = FlatStyle.Flat;
-            buttonRecover.FlatAppearance.BorderSize = 0;
-            buttonRecover.Size = new Size(150, 45);
-            buttonRecover.Location = new Point(CONTENT_MARGIN, 370);
-            buttonRecover.Enabled = false;
-            buttonRecover.Click += buttonRecover_Click;
-            panelContainer.Controls.Add(buttonRecover);
+            currentY += 90;
 
-            // === Cancel button ===
-            buttonCancel = new Button();
-            buttonCancel.Text = "Скасувати";
-            buttonCancel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            buttonCancel.BackColor = Color.FromArgb(200, 60, 60);
-            buttonCancel.ForeColor = Color.White;
-            buttonCancel.FlatStyle = FlatStyle.Flat;
-            buttonCancel.FlatAppearance.BorderSize = 0;
-            buttonCancel.Size = new Size(150, 45);
-            buttonCancel.Location = new Point(CONTENT_MARGIN + 170, 370);
+            // BUTTONS ROW
+            buttonChangePassword = CreateButton("✔ Змінити", centerX, currentY, 145);
+            buttonChangePassword.Enabled = false;
+            buttonChangePassword.Click += buttonChangePassword_Click;
+            panelContainer.Controls.Add(buttonChangePassword);
+
+            buttonCancel = CreateButton("Скасувати", centerX + 155, currentY, 145);
+            buttonCancel.BackColor = Color.FromArgb(60, 20, 20);
+            buttonCancel.MouseEnter += (s, e) => buttonCancel.BackColor = Color.FromArgb(90, 30, 30);
+            buttonCancel.MouseLeave += (s, e) => buttonCancel.BackColor = Color.FromArgb(60, 20, 20);
             buttonCancel.Click += buttonCancel_Click;
             panelContainer.Controls.Add(buttonCancel);
 
             this.ResumeLayout(false);
         }
 
-        // === Gradient background like LoginForm ===
-        private void PanelContainer_Paint(object sender, PaintEventArgs e)
+        private TextBox CreateInput(int x, int y)
         {
-            var gradient = new LinearGradientBrush(
-                panelContainer.ClientRectangle,
-                Color.FromArgb(255, 255, 255),
-                Color.FromArgb(240, 245, 255),
-                LinearGradientMode.Vertical);
+            return new TextBox
+            {
+                BackColor = Color.FromArgb(35, 35, 35),
+                ForeColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                Font = new Font("Segoe UI", 11F),
+                Location = new Point(x, y),
+                Size = new Size(300, 30)
+            };
+        }
 
-            e.Graphics.FillRectangle(gradient, panelContainer.ClientRectangle);
+        private Button CreateButton(string text, int x, int y, int width)
+        {
+            var btn = new Button
+            {
+                Text = text,
+                Font = new Font("Segoe UI Semibold", 12F),
+                BackColor = Color.FromArgb(35, 35, 35),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Size = new Size(width, 48),
+                Location = new Point(x, y),
+                Cursor = Cursors.Hand
+            };
+            btn.FlatAppearance.BorderSize = 0;
+            btn.MouseEnter += (s, e) => btn.BackColor = Color.FromArgb(60, 60, 60);
+            btn.MouseLeave += (s, e) => btn.BackColor = Color.FromArgb(35, 35, 35);
+            return btn;
         }
     }
 }

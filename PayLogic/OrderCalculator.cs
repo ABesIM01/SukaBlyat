@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Globalization;
 using System.Linq;
 
 namespace WinFormsApp2.PayLogic
@@ -14,19 +15,19 @@ namespace WinFormsApp2.PayLogic
             LoadPricesFromDatabase();
         }
 
-        // ===============================
-        //  ЗАВАНТАЖЕННЯ ДАНИХ З SQLite
-        // ===============================
         private void LoadPricesFromDatabase()
         {
             servicePrices = new Dictionary<string, decimal>();
 
             try
             {
-                using (var conn = new SQLiteConnection("Data Source=app.db;Version=3;"))
+                string dbPath = "app.db";
+                if (!System.IO.File.Exists(dbPath))
+                    throw new Exception($"Файл бази даних не знайдено: {dbPath}");
+
+                using (var conn = new SQLiteConnection($"Data Source={dbPath};Version=3;"))
                 {
                     conn.Open();
-
                     string sql = "SELECT name, price FROM Services";
 
                     using (var cmd = new SQLiteCommand(sql, conn))
@@ -37,7 +38,7 @@ namespace WinFormsApp2.PayLogic
                             string name = reader["name"]?.ToString() ?? "";
                             string priceStr = reader["price"]?.ToString() ?? "0";
 
-                            if (decimal.TryParse(priceStr, out decimal price))
+                            if (decimal.TryParse(priceStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal price))
                                 servicePrices[name] = price;
                             else
                                 servicePrices[name] = 0m;
@@ -47,24 +48,15 @@ namespace WinFormsApp2.PayLogic
             }
             catch (Exception ex)
             {
-                throw new Exception("Не вдалося завантажити ціни: " + ex.Message);
+                throw new Exception("Не вдалося завантажити ціни", ex);
             }
         }
 
-        // ===============================
-        //  ОТРИМАТИ ЦІНУ ПОСЛУГИ
-        // ===============================
         public decimal GetPrice(string serviceName)
         {
-            if (servicePrices.TryGetValue(serviceName, out decimal price))
-                return price;
-
-            return 0m;
+            return servicePrices.TryGetValue(serviceName, out decimal price) ? price : 0m;
         }
 
-        // ===============================
-        //  ПІДРАХУНОК ЗАГАЛЬНОЇ СУМИ
-        // ===============================
         public decimal CalculateTotal(IEnumerable<string> selectedServices)
         {
             if (selectedServices == null)
@@ -73,12 +65,9 @@ namespace WinFormsApp2.PayLogic
             return selectedServices.Sum(s => GetPrice(s));
         }
 
-        // ===============================
-        //  ОТРИМАТИ ВСІ ПОСЛУГИ
-        // ===============================
         public IReadOnlyDictionary<string, decimal> GetAllServices()
         {
-            return servicePrices;
+            return new Dictionary<string, decimal>(servicePrices); // повертаємо копію
         }
     }
 }

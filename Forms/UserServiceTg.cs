@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DatabaseClass;
 using WinFormsApp2.PayLogic; // тут лежить TGdatabase
+using WinFormsApp2.Service;
+using System.Globalization;
+using System.Text.Json;
 
 namespace Forms
 {
@@ -72,12 +75,15 @@ namespace Forms
             dataGridViewOrders.BackgroundColor = BackDark;
 
             // Ініціалізація LiqPay
+
+            /*
             payment = new PaymentProcessor(
                 publicKey: "sandbox_i93755190408",
                 privateKey: "sandbox_VWm5JcETlYD4Q8VhWEEIIsk7hqkxptatzapjoUml"
             );
             payment.PaymentSuccess += Payment_PaymentSuccess;
             payment.PaymentFailure += Payment_PaymentFailure;
+            */
 
             this.Load += Form1_Load;
             this.Shown += Form1_Shown;
@@ -217,55 +223,6 @@ namespace Forms
 
 
         // ----- Створення замовлення -----
-        private async void btnMakeOrder_Click(object? sender, EventArgs e)
-        {
-            if (!selectedServices.Any())
-            {
-                MessageBox.Show("Оберіть принаймні одну послугу.", "Увага",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            string name = string.IsNullOrWhiteSpace(txtUserName.Text) ? "Клієнт" : txtUserName.Text.Trim();
-            string products = string.Join(", ", selectedServices.Select(x => x.ToString()));
-
-            try
-            {
-                TGdatabase.AddOrder(name, products);
-
-                string botToken = "8276145573:AAGk5mlkvd5NChGwRz8s2s6JeiTZRIMRs_g";
-                string chatId = "1822940984";
-                string message = $"{name} замовив: {products}";
-                var sendTask = SendTelegramMessageAsync(botToken, chatId, message);
-
-                decimal totalAmount = orderCalculator.CalculateTotal(selectedServices.Select(x => x.ServiceName).ToList());
-                string payUrl = await payment.CreatePaymentAsync(totalAmount, products);
-                Process.Start(new ProcessStartInfo(payUrl) { UseShellExecute = true });
-
-                ShowConfirmationModal(name, products);
-
-                // Скидання вибору плиток
-                foreach (var kv in serviceTiles)
-                {
-                    kv.Key.Tag = null;
-                    kv.Key.BackColor = PanelDark;
-                    foreach (Control c in kv.Key.Controls)
-                        c.ForeColor = TextPrimary;
-                }
-                selectedServices.Clear();
-                txtUserName.Clear();
-
-                if (panelView.Visible)
-                    LoadOrdersIntoGrid();
-
-                await sendTask;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Не вдалося зберегти замовлення: " + ex.Message,
-                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
 
 
@@ -559,5 +516,136 @@ namespace Forms
             gp.CloseFigure();
             ctrl.Region = new Region(gp);
         }
+
+
+
+        private static async Task SendToGAS(string message)
+        {
+            try
+            {
+                using var client = new HttpClient();
+
+                var payload = new
+                {
+                    message = message
+                };
+
+                var json = System.Text.Json.JsonSerializer.Serialize(payload);
+
+                var response = await client.PostAsync(
+                    "https://script.google.com/macros/s/AKfycbwfnwpx_12xSSlY5AT5DuoZzsi7uNkkuWg-syHzBCPiXowtTD1l45WgVC68zdCAi9_veg/exec",
+                    new StringContent(json, Encoding.UTF8, "application/json")
+                );
+
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                // помилки ігноруємо
+            }
+        }
+        private async void btnMakeOrder_Click(object? sender, EventArgs e)
+        {
+            if (!selectedServices.Any())
+            {
+                MessageBox.Show("Оберіть хоча б одну послугу.", "Увага",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string name = string.IsNullOrWhiteSpace(txtUserName.Text) ? "Клієнт" : txtUserName.Text.Trim();
+            string products = string.Join(", ", selectedServices.Select(x => x.ToString()));
+
+            try
+            {
+                // 1) Додаємо замовлення в локальну БД
+                TGdatabase.AddOrder(name, products);
+
+                // 2) Відправляємо повідомлення в Telegram через GAS
+                string message = $"{name} замовив: {products}";
+                var sendTask = SendToGAS(message); // твій існуючий метод
+
+                // 3) Формуємо суму та запитуємо LiqPay URL через GAS
+                decimal totalAmount = orderCalculator.CalculateTotal(selectedServices.Select(x => x.ServiceName).ToList());
+                string payUrl = await GetLiqPayUrlFromGAS(selectedServices, totalAmount);
+
+                // 4) Відкриваємо браузер на сторінку оплати
+                Process.Start(new ProcessStartInfo(payUrl) { UseShellExecute = true });
+
+                // 5) Показуємо модальне підтвердження
+                ShowConfirmationModal(name, products);
+
+                // 6) Скидаємо вибір плиток
+                foreach (var kv in serviceTiles)
+                {
+                    kv.Key.Tag = null;
+                    kv.Key.BackColor = PanelDark;
+                    foreach (Control c in kv.Key.Controls)
+                        c.ForeColor = TextPrimary;
+                }
+                selectedServices.Clear();
+                txtUserName.Clear();
+
+                // 7) Оновлюємо таблицю замовлень
+                if (panelView.Visible)
+                    LoadOrdersIntoGrid();
+
+                await sendTask;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не вдалося зберегти замовлення: " + ex.Message,
+                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
+        public static async Task<string> GetLiqPayUrlFromGAS(IEnumerable<ServiceOrder> selectedServices, decimal amount)
+        {
+            if (selectedServices == null || !selectedServices.Any())
+                throw new ArgumentException("Не обрано жодної послуги.");
+
+            using var client = new HttpClient();
+
+            var serviceDesc = string.Join(", ", selectedServices.Select(x => x.ServiceName));
+
+            var payload = new
+            {
+                service = serviceDesc,
+                amount = Convert.ToDouble(amount, CultureInfo.InvariantCulture) // Число, не рядок
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+
+            using var content = new StringContent(json, Encoding.UTF8, "application/json");
+            using var response = await client.PostAsync(
+                "https://script.google.com/macros/s/AKfycbyYoLXaF3Zo9f72WgOrXYauSMw62H46AtWo6xzAqsAP2ShQYJr5XlCwC3CWafjAuv34/exec",
+                content
+            );
+
+            response.EnsureSuccessStatusCode();
+
+            var respJson = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(respJson);
+            var root = doc.RootElement;
+
+            if (root.TryGetProperty("success", out var successProp) && successProp.GetBoolean())
+            {
+                if (root.TryGetProperty("url", out var urlProp))
+                    return urlProp.GetString()!;
+                else
+                    throw new Exception("GAS повернув success, але URL відсутній");
+            }
+            else
+            {
+                var errorMsg = root.TryGetProperty("error", out var errProp) ? errProp.GetString() : "Unknown error";
+                throw new Exception($"Не вдалося створити LiqPay URL: {errorMsg}");
+            }
+        }
+
+
+
+
     }
 }

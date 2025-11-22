@@ -18,8 +18,7 @@ namespace Forms
     {
         public LoginForm()
         {
-            InitializeComponent();
-            InitializeComponents();
+            InitializeComponent(); 
             Database.Init();
         }
 
