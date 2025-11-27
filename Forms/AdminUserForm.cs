@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
-using DatabaseLibrary;
+using Databases;
 
 namespace Forms
 {

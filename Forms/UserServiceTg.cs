@@ -10,8 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DatabaseClass;
-using WinFormsApp2.PayLogic; // тут лежить TGdatabase
+using WinFormsApp2.PayLogic;
+using Databases; // тут лежить TGdatabase
 
 namespace Forms
 {

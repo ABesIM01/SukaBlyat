@@ -19,8 +19,19 @@
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
     <PackageReference Include="SQLitePCLRaw.config.e_sqlite3" Version="3.0.2" />
     <PackageReference Include="SQLitePCLRaw.core" Version="3.0.2" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.11" />
     <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.2" />
+    <PackageReference Include="System.CodeDom" Version="7.0.0" />
     <PackageReference Include="System.Data.SQLite" Version="2.0.2" />
+    <PackageReference Include="System.Management" Version="7.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\huina5\ClassLibrary1\Google.csproj" />
+    <ProjectReference Include="..\huina5\Databases\Databases.csproj" />
+    <ProjectReference Include="..\huina5\PayLogicc\PayLogicc.csproj" />
+    <ProjectReference Include="..\huina5\ServiceClass\ServiceClass.csproj" />
+    <ProjectReference Include="..\huina5\Telegramm\Telegramm.csproj" />
   </ItemGroup>
 
 </Project>
