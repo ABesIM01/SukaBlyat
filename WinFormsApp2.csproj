@@ -23,4 +23,12 @@
     <PackageReference Include="System.Data.SQLite" Version="2.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\GoogleLogic\GoogleLogic.csproj" />
+    <ProjectReference Include="..\PayLogic\PayLogic.csproj" />
+    <ProjectReference Include="..\ServiceLogic\ServiceLogic.csproj" />
+    <ProjectReference Include="..\TgSLogic\TgSLogic.csproj" />
+  </ItemGroup>
+
 </Project>
